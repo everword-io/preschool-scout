@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "title": "Nia's Preschool Plan",
+    "cycle": "Fall 2027 entry",
+    "generated": "2026-11-11",
+    "sample": true,
+    "home": {"label": "Near 24th and Guerrero", "zip": "94110"}
+  },
+  "family": {
+    "child": {"name": "Nia", "birthdate": "2024-08-14", "startTerm": "Aug-Sep 2027, age 3"},
+    "approach": ["Play-based", "Arts-led", "Vygotsky-style scaffolding"],
+    "priorities": ["Outdoor time every day", "Walkable", "Bilingual staff", "Full day for two working parents"],
+    "languages": ["English", "Yoruba"],
+    "budget": "Up to about $35K a year",
+    "schedule": "Full day, 8:30 to 5:30, five days",
+    "kTargets": ["Any strong public K", "Two independent K-8s"],
+    "notes": "Both parents work in-office three days a week."
+  },
+  "summary": {
+    "headline": "Two clear favorites, one safety, one to watch",
+    "body": [
+      "Juniper Lane and the Clay & Paint Studio School both teach the way you described: teachers build on what children are already doing, and art is the main way children explore ideas. Juniper Lane is the safer institution. The Studio School is the closer match in the classroom but runs thin on cash.",
+      "Dolores Park Cooperative is the most affordable and has the best ratios, but the co-op shifts do not fit two in-office parents. Treehouse Montessori is strong on paper and on kindergarten placement; tour it to see whether the Montessori work cycle feels right for Nia."
+    ],
+    "recommendation": [
+      {"schoolId": "jl", "why": "Best overall: the teaching style you want, a ten-year average teacher tenure, and a year of cash in reserve."},
+      {"schoolId": "cps", "why": "The closest classroom match, a four-minute walk. Apply early: admission is rolling, so timing counts."},
+      {"schoolId": "tm", "why": "Strongest kindergarten placement record. Tour before deciding whether the approach fits."},
+      {"schoolId": "dpc", "why": "Keep only if one parent can take a weekly classroom shift."}
+    ]
+  },
+  "schools": [
+    {
+      "id": "jl", "name": "Juniper Lane Preschool", "shortName": "Juniper Lane", "tier": "finalist",
+      "address": "Sample address, Mission District", "distanceMi": 0.4, "walkMin": 8, "website": "https://example.org/juniper-lane",
+      "approach": "Play-based with Vygotsky-style scaffolding; documented project work",
+      "ages": "2.9 to 5", "ratio": "1:6, groups of 18", "hours": "8:00 to 5:30",
+      "tuition": {"amount": "$31,800 full day", "year": "2026-27", "confidence": "confirmed"},
+      "admissions": {"type": "cycle", "tourRequired": true, "applicationFee": "$100", "notes": "Notifications mid-March"},
+      "programs": [
+        {"name": "Threes", "ages": "2.9 to 3.9", "schedule": "Full or half day", "notes": "Must be toilet-learning, not fully trained"},
+        {"name": "Pre-K", "ages": "4 to 5", "schedule": "Full day", "notes": "Weekly studio with an art teacher"}
+      ],
+      "fit": {"score": 5, "why": "Teachers co-play and narrate, then step back; the studio is part of every week. This is the scaffolding style you asked for."},
+      "kPlacement": {"published": true, "summary": "Publishes a three-year list: 14 public and 9 independent schools."},
+      "licensing": {"typeA": 0, "typeB": 1, "summary": "One Type B (2024, a missing outlet cover), corrected the same day.", "url": "https://example.org/licensing/jl"},
+      "finances": {"status": "nonprofit", "ein": "00-0000001", "tier": "strong", "fy": 2025, "revenue": 2450000, "expenses": 2310000, "netAssets": 2900000, "cashMonths": 12, "summary": "A year of cash in reserve and three years of small surpluses.", "flags": []},
+      "longevity": {"risk": "low", "why": "Strong reserves, stable enrollment."},
+      "pros": ["Exactly the teaching style you want", "Ten-year average teacher tenure", "Healthy reserves"],
+      "cons": ["Tour required, and tours fill fast", "No bilingual staff in the threes room"],
+      "askOnTour": ["Which lead teacher would Nia have?", "How do teachers decide when to step in during play?", "Any Yoruba or other West African languages among staff or families?"],
+      "sources": [{"label": "School site (sample)", "url": "https://example.org/juniper-lane"}]
+    },
+    {
+      "id": "cps", "name": "Clay & Paint Studio School", "shortName": "Studio School", "tier": "finalist",
+      "address": "Sample address, Mission District", "distanceMi": 0.2, "walkMin": 4, "website": "https://example.org/studio-school",
+      "approach": "Arts-led, Reggio-inspired; teachers extend children's ideas through materials",
+      "ages": "3 to 5", "ratio": "1:5", "hours": "8:30 to 5:30, year-round",
+      "tuition": {"amount": "$33,600 full day", "year": "2026-27", "confidence": "third-party listing"},
+      "admissions": {"type": "rolling", "tourRequired": false, "notes": "Places offered as spaces open; date of application matters"},
+      "programs": [{"name": "Mixed-age studio", "ages": "3 to 5", "schedule": "Full day, year-round", "notes": "Must be fully toilet-trained"}],
+      "fit": {"score": 5, "why": "The closest classroom match: art is the curriculum, not an add-on, and teachers work right at the edge of what each child can do."},
+      "kPlacement": {"published": false, "summary": "No list published. The director says she helps families apply."},
+      "licensing": {"typeA": 0, "typeB": 3, "summary": "Three Type B citations in two years, two about supervision ratios.", "url": "https://example.org/licensing/cps"},
+      "finances": {"status": "nonprofit", "ein": "00-0000002", "tier": "fragile", "fy": 2025, "revenue": 980000, "expenses": 1040000, "netAssets": -45000, "cashMonths": 1.5, "summary": "Negative net assets and about six weeks of cash. Prepaid tuition is carrying the school.", "flags": ["Negative net assets", "Deficit two years running"]},
+      "longevity": {"risk": "high", "why": "Thin cash and a shrinking payroll."},
+      "pros": ["Four-minute walk", "Teaching style is the closest match", "Year-round full day"],
+      "cons": ["Fragile finances", "Supervision citations", "Tuition figure not confirmed by the school"],
+      "askOnTour": ["How many adults are on the floor at 4:30?", "What changed after the supervision citations?", "What is the plan if enrollment drops?"],
+      "sources": [{"label": "School site (sample)", "url": "https://example.org/studio-school"}]
+    },
+    {
+      "id": "tm", "name": "Treehouse Montessori", "shortName": "Treehouse", "tier": "finalist",
+      "address": "Sample address, Noe Valley", "distanceMi": 0.9, "walkMin": 18, "website": "https://example.org/treehouse",
+      "approach": "Traditional Montessori, mixed-age primary",
+      "ages": "2.10 to 6", "ratio": "1:8 work cycle, 1:6 afternoons", "hours": "8:00 to 5:30",
+      "tuition": {"amount": "$29,400 full day", "year": "2026-27", "confidence": "confirmed"},
+      "admissions": {"type": "cycle", "tourRequired": true, "applicationFee": "$150", "notes": "Essays weigh heavily; no child interview"},
+      "programs": [{"name": "Primary", "ages": "2.10 to 6", "schedule": "Half or full day", "notes": "Must be fully toilet-trained at entry"}],
+      "fit": {"score": 3, "why": "Excellent program, but the independent work cycle is a different philosophy from the scaffolded, social play you described."},
+      "kPlacement": {"published": true, "summary": "Strongest list in the area: 21 independent and 12 public schools."},
+      "licensing": {"typeA": 0, "typeB": 0, "summary": "Clean record in five years.", "url": "https://example.org/licensing/tm"},
+      "finances": {"status": "nonprofit", "ein": "00-0000003", "tier": "steady", "fy": 2025, "revenue": 3100000, "expenses": 3020000, "netAssets": 1800000, "cashMonths": 6, "summary": "About six months of reserves; revenue up two years running.", "flags": []},
+      "longevity": {"risk": "low", "why": "Steady finances and a long waitlist."},
+      "pros": ["Best kindergarten placement record", "Seventeen-year average teacher tenure", "Clean licensing record"],
+      "cons": ["Philosophy is a partial match", "18-minute walk"],
+      "askOnTour": ["How much collaborative play happens in a typical day?", "How do teachers support a child who prefers working with friends?"],
+      "sources": [{"label": "School site (sample)", "url": "https://example.org/treehouse"}]
+    },
+    {
+      "id": "dpc", "name": "Dolores Park Cooperative Nursery", "shortName": "Dolores Co-op", "tier": "finalist",
+      "address": "Sample address, Mission Dolores", "distanceMi": 0.6, "walkMin": 12, "website": "https://example.org/dolores-coop",
+      "approach": "Play-based parent cooperative",
+      "ages": "2.9 to 5", "ratio": "1:4 with a parent in every room", "hours": "9:00 to 3:30; extended care to 5:00",
+      "tuition": {"amount": "$14,200 full day", "year": "2026-27", "confidence": "confirmed"},
+      "admissions": {"type": "cycle", "tourRequired": true, "applicationFee": "$50", "notes": "Sibling and alumni priority"},
+      "programs": [{"name": "Threes and fours", "ages": "2.9 to 5", "schedule": "Half or full day", "notes": "Weekly three-hour parent shift"}],
+      "fit": {"score": 3, "why": "The play-based approach fits, but the weekly classroom shift does not fit two in-office parents."},
+      "kPlacement": {"published": false, "summary": "No list published."},
+      "licensing": {"typeA": 0, "typeB": 1, "summary": "One Type B in 2023, resolved.", "url": "https://example.org/licensing/dpc"},
+      "finances": {"status": "nonprofit", "ein": "00-0000004", "tier": "steady", "fy": 2024, "revenue": 820000, "expenses": 790000, "netAssets": 610000, "cashMonths": 8, "summary": "Small, debt-free, about eight months of reserves.", "flags": []},
+      "longevity": {"risk": "low", "why": "Debt-free with a loyal parent base."},
+      "pros": ["Lowest cost", "Best ratios", "Strong parent community"],
+      "cons": ["Weekly co-op shift", "Ends at 5:00 with extended care"],
+      "askOnTour": ["Can the co-op shift be split or bought out?"],
+      "sources": [{"label": "School site (sample)", "url": "https://example.org/dolores-coop"}]
+    },
+    {
+      "id": "bgs", "name": "Bernal Garden School", "shortName": "Bernal Garden", "tier": "consider",
+      "address": "Sample address, Bernal Heights", "distanceMi": 1.3, "website": "https://example.org/bernal-garden",
+      "approach": "Nature-based, mostly outdoors",
+      "ages": "3 to 5", "ratio": "1:7", "hours": "8:30 to 3:00",
+      "tuition": {"amount": "$24,000", "year": "2026-27", "confidence": "confirmed"},
+      "admissions": {"type": "cycle", "tourRequired": false},
+      "fit": {"score": 4, "why": "Outdoor time every day is its whole program. The short day is the problem."},
+      "kPlacement": {"published": false, "summary": "No list published."},
+      "licensing": {"typeA": 0, "typeB": 0, "summary": "Clean."},
+      "finances": {"status": "forprofit", "tier": "unknown", "summary": "For-profit; no public financials."},
+      "longevity": {"risk": "unknown", "why": "No public data."},
+      "pros": ["Outdoors every day"], "cons": ["Ends at 3:00", "A drive, not a walk"],
+      "sources": [{"label": "School site (sample)", "url": "https://example.org/bernal-garden"}]
+    },
+    {
+      "id": "llc", "name": "Little Lantern Learning Center", "tier": "dropped",
+      "dropReason": "A Type A citation in 2025 (a child left unsupervised) and a large outstanding loan.",
+      "address": "Sample address, Mission District", "distanceMi": 0.5,
+      "approach": "Academic preschool",
+      "licensing": {"typeA": 1, "typeB": 2, "summary": "Type A in 2025: a child left unsupervised."},
+      "finances": {"status": "nonprofit", "tier": "fragile", "summary": "Negative net assets and a $400K loan."},
+      "sources": [{"label": "School site (sample)", "url": "https://example.org/little-lantern"}]
+    }
+  ],
+  "deadlines": [
+    {"date": "2026-12-01", "schoolId": "cps", "what": "Apply early: rolling admission weighs your date", "status": "confirmed"},
+    {"date": "2026-12-15", "schoolId": "tm", "what": "Application and essays due", "status": "confirmed"},
+    {"date": "2027-01-10", "schoolId": "jl", "what": "Last tour", "status": "to-confirm"},
+    {"date": "2027-01-15", "schoolId": "jl", "what": "Application due", "status": "confirmed"},
+    {"date": "2027-01-31", "schoolId": "dpc", "what": "Application due", "status": "confirmed"},
+    {"date": "2027-03-12", "schoolId": "jl", "what": "Decisions released", "status": "to-confirm"}
+  ],
+  "financesSummary": {
+    "headline": "One school to watch, the rest are healthy",
+    "body": ["Three finalists have six months or more of reserves. The Studio School is the exception: it has spent more than it earned two years running and now owes families more in prepaid tuition than it holds in cash. That does not rule it out, but ask how it would handle a bad enrollment year."]
+  },
+  "rubric": {
+    "evidence": {
+      "jl": {"i4": [5, "Ten-year average teacher tenure."], "i5": [4, "1:6, groups of 18."], "i6": [4, "One minor citation, fixed the same day."], "i8": [5, "A year of cash in reserve."], "f1": [4, "Publishes a three-year K list."]},
+      "cps": {"i5": [5, "1:5 stated."], "i6": [2, "Three Type B citations, two on supervision."], "i8": [1, "Negative net assets, six weeks of cash."], "f6": [null, "Four-minute walk; year-round full day."]},
+      "tm": {"i4": [5, "Seventeen-year average teacher tenure."], "i6": [5, "Clean five-year record."], "i8": [4, "Six months of reserves."], "f1": [5, "Strongest K list in the area."]},
+      "dpc": {"i5": [5, "1:4 with a parent in every room."], "i8": [4, "Debt-free, eight months of reserves."], "f5": [null, "Weekly three-hour parent shift."]}
+    }
+  },
+  "essays": [
+    {"schoolId": "jl", "prompt": "Tell us about your child.", "wordLimit": 250, "draft": "Nia is a talker. She narrates whatever she is building, and when something falls over she tells us exactly what went wrong and what she will try next. She is cautious with new people for the first few minutes, then she is the one handing out jobs.\n\nWe were drawn to Juniper Lane because of how the teachers play alongside the children and then step back. [A MOMENT FROM THE TOUR]. That is how Nia learns best at home: when someone shows her one step and lets her take the next.\n\nAt home we speak English and Yoruba, and she switches between them depending on who she is talking to. [SOMETHING SHE LOVES TO MAKE]."},
+    {"schoolId": "cps", "prompt": "What should we know about your child?", "wordLimit": 200, "draft": "Nia thinks with her hands. Give her clay or a box of buttons and she will tell you a story about it. [HER FAVORITE MATERIAL].\n\nWe would love for her to be somewhere art is how children work through ideas, not a break from them. [WHY THE STUDIO SCHOOL]."}
+  ],
+  "caveats": [
+    "This is sample data. Every school, number and date on this page is fictional.",
+    "In a real report, tuition marked \"third-party listing\" is approximate until the school confirms it."
+  ],
+  "sources": [
+    {"label": "IRS Form 990 search (ProPublica Nonprofit Explorer)", "url": "https://projects.propublica.org/nonprofits/"},
+    {"label": "California child care licensing search", "url": "https://www.ccld.dss.ca.gov/carefacilitysearch/"}
+  ]
+}

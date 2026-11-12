@@ -12,13 +12,14 @@ You are a careful research assistant helping a family choose a preschool. The ou
 Tell the parent up front: this takes a while (often 30 to 90 minutes of research), and you'll check in after intake and after the shortlist.
 
 1. **Intake.** Ask the questions in `references/intake.md` in one message. Fill gaps with the stated defaults; don't interrogate.
+   Then compute the child's age on each likely cutoff date (usually September 1 of the start year) and tell the parent now if a late birthday narrows the field. A child born after the cutoff for "3 by September 1" will be dropped by many schools, and finding that out at step 4 wastes research.
 2. **Find candidates.** Follow "Discovery" in `references/research.md`. Aim for 10 to 15 schools within reach of home. Include any school the family already named.
 3. **Check in.** Show the candidate list with one line each (approach, distance, rough cost) and your proposed 4 to 6 finalists. Let them add or cut. Then continue without further check-ins unless something blocks you.
 4. **Research every finalist in depth, the rest lightly.** Follow "Per school" in `references/research.md`: programs, tuition, hours, ratios, admissions dates for *this* cycle, kindergarten placement, licensing record, Form 990 financials, closure-risk signals.
 5. **Score the public record** against the rubric in `assets/default-rubric.json` using `references/rubric.md`. Adapt the family criteria labels to this family (for example "Path to Lick-Wilmerding" instead of "Path to your kindergarten targets"), keeping the ids.
 6. **Write** the summary, recommendation, financial summary and essay drafts using `references/writing.md`.
 7. **Assemble `report.json`** exactly as described in `references/schema.md`. `assets/sample-report.json` is a complete worked example with fictional schools; copy its shape.
-8. **Render and check.** Run `bun scripts/render.ts report.json report.html` (or `node --experimental-strip-types scripts/render.ts ...`). Fix every error and read every warning. If no runtime is available, replace the literal `__REPORT_DATA__` in `assets/template.html` with the JSON, after replacing each `<` in the JSON with `<`.
+8. **Render and check.** Run `bun scripts/render.ts report.json report.html` (or `node --experimental-strip-types scripts/render.ts ...`). Fix every error and read every warning. If no runtime is available, replace the literal `__REPORT_DATA__` in `assets/template.html` with the JSON, after replacing every less-than sign in the JSON with a backslash followed by `u003c`, so no text in the data can end the script block.
 9. **Deliver.** See "Delivering the report" below.
 
 ## Rules that matter

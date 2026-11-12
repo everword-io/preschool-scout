@@ -32,6 +32,7 @@ schools[]
   website
   approach, ages, ratio, hours   strings
   tuition          { amount: "$31,800 full day", year: "2026-27", confidence: "confirmed" | "third-party listing" | "estimate" }
+                   or { unknown: true } when the school doesn't publish it (add a tour question)
   admissions       { type: "cycle" | "rolling", tourRequired: bool, applicationFee, notes }
   programs[]       { name, ages, schedule, notes }
   fit              { score: 1-5, why }    fit with THIS family's stated wants
@@ -44,14 +45,20 @@ schools[]
 
 deadlines[]        { date, schoolId, what, status: "confirmed" | "to-confirm" }
 
-rubric             optional; render.ts fills institutional, family and gates from assets/default-rubric.json when missing
+rubric             optional; render.ts starts from assets/default-rubric.json
   institutional[], family[]   { id, w, label, src, ask, a: [one, three, five] }
-  gates[]          { id, label }
+                   List only what you change. An entry with a default's id overrides just the
+                   fields you give ({ "id": "f1", "label": "Path to Town School" }); a new id is
+                   appended; { "id": "f8", "omit": true } removes one. Keep weights summing to 100.
+  gates[]          { id, label }, merged the same way
   evidence         { [schoolId]: { [criterionId]: [1-5 | null, "evidence sentence"] } }
 
 essays[]           { schoolId, prompt, wordLimit, draft }   draft uses \n\n between paragraphs
+                   prompt: the school's exact wording if published; otherwise "Tell us about your child."
+                   and add "essay prompt not yet published" to caveats
 caveats[]          what you couldn't verify, blocked sources, estimates
-sources[]          general sources { label, url }
+sources[]          sources that aren't about one school: the state licensing API, city directories,
+                   the 990 search, research you relied on { label, url }
 ```
 
 The rubric scores only `tier: "finalist"` schools (or the first six non-dropped schools if there are no finalists). Keep finalists to six or fewer so the scoring grid fits on a phone.

@@ -24,8 +24,20 @@ const warnings: string[] = [];
 // Fill the rubric from the defaults wherever the report leaves it out.
 const defaults = JSON.parse(readFileSync(join(assets, "default-rubric.json"), "utf8"));
 report.rubric = report.rubric ?? {};
+// Entries in the report override the default with the same id, field by field.
+// New ids are appended; { "id": "f8", "omit": true } removes a default.
 for (const k of ["institutional", "family", "gates"]) {
-  if (!Array.isArray(report.rubric[k]) || report.rubric[k].length === 0) report.rubric[k] = defaults[k];
+  const given: any[] = Array.isArray(report.rubric[k]) ? report.rubric[k] : [];
+  const byId = new Map(given.map((c) => [c.id, c]));
+  const merged = defaults[k].map((d: any) => ({ ...d, ...(byId.get(d.id) ?? {}) }));
+  const known = new Set(defaults[k].map((d: any) => d.id));
+  for (const c of given) if (!known.has(c.id)) merged.push(c);
+  for (const c of merged) {
+    if (c.omit) continue;
+    if (!c.id || !c.label) errors.push(`rubric.${k}: entry needs id and label: ${JSON.stringify(c).slice(0, 80)}`);
+    if (k !== "gates" && (!Array.isArray(c.a) || c.a.length !== 3)) errors.push(`rubric.${k}.${c.id}: "a" must list what 1, 3 and 5 look like`);
+  }
+  report.rubric[k] = merged.filter((c: any) => !c.omit);
 }
 report.rubric.evidence = report.rubric.evidence ?? {};
 
@@ -38,7 +50,8 @@ for (const s of schools) {
   ids.add(s.id);
   if (!["finalist", "consider", "dropped"].includes(s.tier)) warnings.push(`${s.id}: tier should be finalist, consider or dropped`);
   if (!s.sources?.length) warnings.push(`${s.id}: no sources`);
-  if (s.tier !== "dropped" && !s.tuition?.amount) warnings.push(`${s.id}: no tuition`);
+  if (s.tier === "finalist" && !s.tuition?.amount && !s.tuition?.unknown)
+    warnings.push(`${s.id}: finalist with no tuition (find it, or set tuition.unknown: true and add a tour question)`);
   if (s.tier === "dropped" && !s.dropReason) warnings.push(`${s.id}: dropped without a dropReason`);
 }
 const finalists = schools.filter((s) => s.tier === "finalist").length;

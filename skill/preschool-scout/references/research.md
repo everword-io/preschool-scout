@@ -28,13 +28,24 @@ Visit the school's own site first. Most have pages named Admissions, Apply, Tuit
 
 ## Licensing record (California)
 
-Search the facility on <https://www.ccld.dss.ca.gov/carefacilitysearch/> by name or facility number. The detail page lists inspections, complaints and citations.
+The search page <https://www.ccld.dss.ca.gov/carefacilitysearch/> is often down (503). Its JSON API behind it is more reliable; use it directly (send a browser-like user-agent):
 
-- **Type A** citations are immediate risk to health or safety (for example a child left unsupervised). Any Type A in the last five years fails gate g2 unless the parents are satisfied with the school's answer.
+| What | URL |
+| --- | --- |
+| Centers in a zip | `https://www.ccld.dss.ca.gov/transparencyapi/api/FacilitySearch?facType=850&facility=&Street=&city=&zip=94110&county=&facnum=` (850 = child care centers; all the empty parameters are required) |
+| One facility | `https://www.ccld.dss.ca.gov/transparencyapi/api/FacilityDetail/<facility number>` |
+| One visit report | `https://www.ccld.dss.ca.gov/transparencyapi/api/FacilityReports?facNum=<facility number>&inx=<n>` (HTML; n counts from 1; some visits have no report) |
+
+`FacilityDetail` gives capacity, licensed ages and hours (`COMMENTS`), the last visit, and citation counts split three ways: `NBRINSPTYPA`/`B` (inspections), `NBRCMPLTTYPA`/`B` (complaints) and `NBROTHERTYPA`/`B` (other visits). For the report, `typeA` is the sum of the three A counts and `typeB` the sum of the three B counts. Read the visit reports for every finalist to learn what each citation was about.
+
+- **Type A** citations are immediate risk to health or safety (for example a child left unsupervised). Any Type A in the record fails gate g2 unless the parents are satisfied with the school's answer.
 - **Type B** citations are lower risk (paperwork, a missing outlet cover). Several on supervision or ratios is still a pattern worth asking about.
-- Count A and B separately for the last five years and summarize them in one plain sentence.
+- **Window:** use whatever the state publishes, which is usually the last three to five years. Say the window in the summary, for example "no citations in visits since 2021".
+- Summarize in one plain sentence, and put the facility number and the `FacilityDetail` URL in `licensing`.
 
-If the state site is blocked or slow, mirrors such as readyrule.com or schoolscope.co republish the same records; cite the mirror and say so.
+If the state is unreachable, mirrors such as readyrule.com or schoolscope.co republish the same records; cite the mirror and say so.
+
+Licensing records are also a quick check of a school's own claims: capacity versus stated class sizes, and licensed hours versus advertised hours.
 
 Outside California, use the state's licensing lookup and map its categories to "serious" and "minor" in the summary.
 
@@ -44,11 +55,13 @@ Most independent preschools are 501(c)(3) nonprofits and file IRS Form 990, whic
 
 1. Find the EIN: `bun scripts/propublica.ts search "<name>" CA`. Try the legal name, shorter names, and "nursery school". Church-run schools often file under the church and won't appear; set `status: "church"` and `tier: "unknown"`.
 2. Pull the history: `bun scripts/propublica.ts filings <EIN>`.
-3. Judge:
-   - **strong**: net assets above a year of expenses, or steady surpluses with six-plus months of reserves
-   - **steady**: break-even or small surpluses, a few months of reserves
-   - **fragile**: negative net assets, two or more deficit years, a large loan, or prepaid tuition exceeding cash
+3. Judge, using the newest year with figures (the script prints it first and warns if newer filings lack figures):
+   - **fragile**: negative net assets, two or more deficit years in the last three, or prepaid tuition exceeding cash
+   - **strong**: net assets above a year of expenses and no deficit in the newest year
+   - **steady**: anything in between
    - **unknown**: for-profit, church-run or no filings. Say "no visibility", not "weak"
+
+   Check fragile first; if any fragile condition holds, the tier is fragile however large the assets. Large liabilities on their own are not fragile: a mortgage on a building the school owns usually comes with matching assets. When liabilities jump (for example from $150K to $6M), find out why (a building purchase, a loan, deferred revenue), say so in `flags`, and if you can't tell, flag it as a tour question.
 4. Cash months: if the filing PDF or XML shows cash plus savings (Part X lines 1 and 2), divide by monthly expenses. Otherwise estimate from net assets and say so.
 5. Useful signals for longevity: falling program revenue, falling payroll or headcount (Part I line 5), officer pay that jumped, related-party transactions (Schedule L), PPP or SBA loans.
 

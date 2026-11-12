@@ -20,4 +20,12 @@ Ask these in one message, numbered, so the parent can answer in a few lines. Say
 - Search radius: 1.5 miles in a dense city, 5 miles in a suburb; widen if fewer than 8 candidates.
 - Finalists: 4 to 6.
 - Essay word limit: 250 unless the school states one.
-- Rubric weights: as in `assets/default-rubric.json`. Raise "Home language and culture" to 10 if a non-English home language matters, and lower "Path to your kindergarten targets" to 5 if they're going public and undecided; keep each group summing to 100.
+- Rubric weights: as in `assets/default-rubric.json`, with these adjustments (keep each group summing to 100; take or give the difference from f2 "Teaching style match"):
+  - A non-English home language matters: raise f8 "Home language and culture" to 10.
+  - Going public only: lower f1 "Path to your kindergarten targets" to 5.
+  - Undecided between public and independent, or no named targets: leave f1 at 15 and relabel it "Kindergarten guidance".
+  - Named independent targets: relabel f1 "Path to <their schools>".
+
+## Age check
+
+Compute the child's age on September 1 of the start year (and on any other cutoff a school states). Write it into `family.child.startTerm`, for example "Aug-Sep 2027, age 2 years 11 months on Sept 1". A school whose stated minimum the child misses is a gate g1 fail: put it in `tier: "dropped"` with the reason, unless the school admits mid-year when the child reaches the age.

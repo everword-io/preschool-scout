@@ -196,7 +196,7 @@ function upcoming(n){return (D.deadlines||[]).filter(d=>{const x=daysLeft(d.date
         ${s.ages?`<dt>Ages</dt><dd>${esc(s.ages)}</dd>`:""}
         ${s.ratio?`<dt>Ratio</dt><dd>${esc(s.ratio)}</dd>`:""}
         ${s.hours?`<dt>Hours</dt><dd>${esc(s.hours)}</dd>`:""}
-        ${t.amount?`<dt>Tuition</dt><dd>${esc(t.amount)}${t.year?" ("+esc(t.year)+")":""}${t.confidence&&t.confidence!=="confirmed"?" "+pill(t.confidence,"mid"):""}</dd>`:""}
+        ${t.unknown&&!t.amount?`<dt>Tuition</dt><dd>Not published. Ask on the tour.</dd>`:""}${t.amount?`<dt>Tuition</dt><dd>${esc(t.amount)}${t.year?" ("+esc(t.year)+")":""}${t.confidence&&t.confidence!=="confirmed"?" "+pill(t.confidence,"mid"):""}</dd>`:""}
         ${a.type||a.notes?`<dt>Admissions</dt><dd>${esc([a.type==="rolling"?"Rolling":a.type==="cycle"?"Annual cycle":a.type,a.tourRequired?"tour required":"",a.applicationFee?"fee "+a.applicationFee:"",a.notes].filter(Boolean).join(" · "))}</dd>`:""}
         ${l.summary?`<dt>Licensing</dt><dd>${esc(l.summary)}${l.url?` <a href="${esc(l.url)}" target="_blank" rel="noopener">record</a>`:""}</dd>`:""}
         ${k.summary?`<dt>K placement</dt><dd>${esc(k.summary)}</dd>`:""}

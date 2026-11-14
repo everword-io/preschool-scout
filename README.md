@@ -8,7 +8,7 @@ It uses the open [Agent Skills](https://agentskills.io) format, so it works with
 
 **Sample report (fictional family and schools):** https://scout-demo.ourwhole.family
 
-The sample is a plain web page (deployed to Vercel from `docs/`). Everything works there except the claude.ai-only features listed below.
+The sample is a plain web page, deployed to Vercel from `docs/` by `.github/workflows/deploy-demo.yml`. Everything works there except the claude.ai-only features listed below.
 
 ## Use it
 

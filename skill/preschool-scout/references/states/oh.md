@@ -11,10 +11,10 @@ Last checked: 2026-11-13.
 | --- | --- |
 | Programs near a zip | On the search page, enter the zip code and choose a program type: "Licensed Child Care Center" or "Licensed School-Based Preschool". The form needs a real browser. With only a page fetcher you can't list every program near a zip: say so in `caveats`, gather names from other discovery sources, and confirm each one on its provider page (search the web for `site:childcaresearch.ohio.gov <program name>`). |
 | One program | `https://childcaresearch.ohio.gov/provider/<program number>/` (license number without leading zeros, for example `2190019834`). It shows the license, hours, accreditations and the SUTQ rating. |
-| Its inspections | `https://childcaresearch.ohio.gov/inspections/<program number>`: lists every report with a link. |
+| Its inspections | `https://childcaresearch.ohio.gov/inspections/<program number>`: plain text for each visit (date, type such as ANNUAL or COMPLAINT, "Original Inspection Compliance Status" such as Partially Compliant, and "Inspection Corrective Action Status" such as Non-Compliance - Fully Addressed), with a link to the full report. |
 | One inspection report | PDFs at `https://childcaresearch.ohio.gov/pdf/<12-digit license number>_<YYYY-MM-DD>_<TYPE>.pdf`, where TYPE is ANNUAL, COMPLAINT, COMPLIANCE, PROVISIONAL and so on. Older reports are removed, so take the links from the inspections page rather than guessing dates. |
 
-Each inspection report has a summary: rules verified, rules with noncompliance, and how many findings were serious, moderate and low risk. Count over the reports the inspections page actually lists, and give their date range. (Separately, Ohio reviews noncompliance over a rolling 12 months for ratings, and serious or moderate findings can lower a rating.)
+The full reports are scanned images with no text layer (checked 2026-11-13), so reading them needs a tool that reads PDF pages as images. Without one, report each visit's compliance and corrective-action status from the inspections page, set `licensing.unavailable: true` for the risk counts, and say so. Each inspection report has a summary: rules verified, rules with noncompliance, and how many findings were serious, moderate and low risk. Count over the reports the inspections page actually lists, and give their date range. (Separately, Ohio reviews noncompliance over a rolling 12 months for ratings, and serious or moderate findings can lower a rating.)
 
 ### Violation categories
 

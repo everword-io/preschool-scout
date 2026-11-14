@@ -1,5 +1,7 @@
 # Preschool Scout
 
+> **New to this? Start with the guide:** [How to check a preschool before you apply](https://ourwhole.family/blog/how-to-check-a-preschool-before-you-apply). It explains what licensing records, tax filings and admissions pages can tell you, what to ask on a tour, and how this tool fits in.
+
 An AI agent skill that researches preschools near a family's home, independent and public alike, and builds an interactive decision report: side-by-side comparison, this cycle's deadlines, licensing records, nonprofit financials, eligibility for free public programs, a two-parent scoring rubric, and draft "tell us about your child" essays.
 
 Give it your zip code and what you want in a school. Your agent does the research with real lookups (school sites, state licensing records, IRS Form 990 filings, public pre-K and Head Start programs) and fills one data file. A fixed page template draws the report from that file.

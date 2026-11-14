@@ -32,4 +32,4 @@ Each finalist with an essay prompt gets a draft in `essays`.
 - Stay under the word limit. Default 250.
 - Different schools get genuinely different drafts, not one essay with the name swapped.
 
-The report page has a "Redraft with Claude" button that rewrites a draft from the parents' own paragraph about their child under these same rules.
+When the report is published as a claude.ai Artifact, the page has a "Redraft with Claude" button that rewrites a draft from the parents' own paragraph about their child under these same rules.

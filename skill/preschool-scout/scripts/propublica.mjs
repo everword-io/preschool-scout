@@ -1,14 +1,13 @@
 // Look up a nonprofit preschool's IRS Form 990 history via ProPublica Nonprofit Explorer.
 // Usage:
-//   bun propublica.ts search "<school name>" [STATE]   -> candidate EINs
-//   bun propublica.ts filings <EIN>                     -> newest year first, one JSON line per year
-// Works with node --experimental-strip-types too. Needs outbound HTTPS to projects.propublica.org.
+//   node propublica.mjs search "<school name>" [STATE]   -> candidate EINs
+//   node propublica.mjs filings <EIN>                  -> newest year first, one JSON line per year
+// Node 18+ or bun, no dependencies. Needs outbound HTTPS to projects.propublica.org.
 // Filing PDFs sit behind a bot check; don't try to get past it. The extracted figures here are enough.
-export {};
 const API = "https://projects.propublica.org/nonprofits/api/v2";
 const [cmd, arg, state] = process.argv.slice(2);
 
-async function get(url: string): Promise<any | null> {
+async function get(url) {
   const r = await fetch(url, { headers: { "user-agent": "preschool-scout/0.1" } });
   if (r.status === 404) return null; // ProPublica answers "no results" with a 404
   if (!r.ok) throw new Error(`${r.status} ${url}`);
@@ -29,7 +28,7 @@ if (cmd === "search" && arg) {
     process.exit(0);
   }
   console.log(`# ${j.organization?.name} (${j.organization?.city}, ${j.organization?.state})`);
-  const rows = (j.filings_with_data ?? []).map((f: any) => ({
+  const rows = (j.filings_with_data ?? []).map((f) => ({
     fiscalYearEnd: String(f.tax_prd),
     revenue: f.totrevenue,
     programRevenue: f.totprgmrevnue,
@@ -42,14 +41,14 @@ if (cmd === "search" && arg) {
     officerComp: f.compnsatncurrofcr,
     otherWages: f.othrsalwages,
   }));
-  rows.sort((a: any, b: any) => b.fiscalYearEnd.localeCompare(a.fiscalYearEnd));
+  rows.sort((a, b) => b.fiscalYearEnd.localeCompare(a.fiscalYearEnd));
   const newestData = rows[0]?.fiscalYearEnd ?? "";
-  const newer = (j.filings_without_data ?? []).filter((f: any) => String(f.tax_prd) > newestData);
+  const newer = (j.filings_without_data ?? []).filter((f) => String(f.tax_prd) > newestData);
   if (newer.length)
-    console.log(`# NOTE: ${newer.length} newer filing(s) have no extracted figures (${newer.map((f: any) => f.tax_prd).join(", ")}). Say the numbers below are from FY${newestData.slice(0, 4)} and may be stale.`);
+    console.log(`# NOTE: ${newer.length} newer filing(s) have no extracted figures (${newer.map((f) => f.tax_prd).join(", ")}). Say the numbers below are from FY${newestData.slice(0, 4)} and may be stale.`);
   for (const r of rows) console.log(JSON.stringify(r));
   if (!rows.length) console.log("# no extracted figures for any year");
 } else {
-  console.error('usage: propublica.ts search "<name>" [STATE] | filings <EIN>');
+  console.error('usage: propublica.mjs search "<name>" [STATE] | filings <EIN>');
   process.exit(2);
 }

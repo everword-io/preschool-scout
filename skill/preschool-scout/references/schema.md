@@ -37,7 +37,8 @@ schools[]
   programs[]       { name, ages, schedule, notes }
   fit              { score: 1-5, why }    fit with THIS family's stated wants
   kPlacement       { published: bool, summary }
-  licensing        { facilityNumber, typeA: n, typeB: n, summary, url }   counts for the last five years
+  licensing        { facilityNumber, typeA: n, typeB: n, summary, url }   counts cover the whole window the state
+                   publishes; name the window in summary ("no citations in visits since 2021")
   finances         { status: "nonprofit" | "forprofit" | "church" | "unknown", ein, tier: "strong" | "steady" | "fragile" | "unknown", fy, revenue, expenses, netAssets, cashMonths, summary, flags[] }
   longevity        { risk: "low" | "medium" | "high" | "unknown", why }
   pros[], cons[], askOnTour[]
@@ -45,7 +46,7 @@ schools[]
 
 deadlines[]        { date, schoolId, what, status: "confirmed" | "to-confirm" }
 
-rubric             optional; render.ts starts from assets/default-rubric.json
+rubric             optional; render.mjs starts from assets/default-rubric.json
   institutional[], family[]   { id, w, label, src, ask, a: [one, three, five] }
                    List only what you change. An entry with a default's id overrides just the
                    fields you give ({ "id": "f1", "label": "Path to Town School" }); a new id is

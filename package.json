@@ -1,10 +1,10 @@
 {
   "name": "preschool-scout",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "sample": "bun skill/preschool-scout/scripts/render.ts skill/preschool-scout/assets/sample-report.json docs/index.html",
+    "sample": "bun skill/preschool-scout/scripts/render.mjs skill/preschool-scout/assets/sample-report.json docs/index.html",
     "zip": "bun scripts/zip-skill.ts",
     "check": "bun run sample && bun scripts/check-page.ts docs/index.html"
   }

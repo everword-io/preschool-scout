@@ -1,25 +1,23 @@
 // Render a Preschool Scout report: report.json + template.html -> report.html
-// Usage: bun render.ts <report.json> [out.html]
-//    or: node --experimental-strip-types render.ts <report.json> [out.html]
+// Usage: node render.mjs <report.json> [out.html]   (Node 18+, or bun; no dependencies)
 // Exits 1 if the report has errors; prints warnings for gaps worth fixing.
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-type Crit = { id: string; w: number; label: string; ask: string; a: string[] };
 const here = dirname(fileURLToPath(import.meta.url));
 const assets = join(here, "..", "assets");
 
 const [inPath, outArg] = process.argv.slice(2);
 if (!inPath) {
-  console.error("usage: render.ts <report.json> [out.html]");
+  console.error("usage: render.mjs <report.json> [out.html]");
   process.exit(2);
 }
 const report = JSON.parse(readFileSync(resolve(inPath), "utf8"));
 const outPath = resolve(outArg ?? inPath.replace(/\.json$/i, "") + ".html");
 
-const errors: string[] = [];
-const warnings: string[] = [];
+const errors = [];
+const warnings = [];
 
 // Fill the rubric from the defaults wherever the report leaves it out.
 const defaults = JSON.parse(readFileSync(join(assets, "default-rubric.json"), "utf8"));
@@ -27,23 +25,23 @@ report.rubric = report.rubric ?? {};
 // Entries in the report override the default with the same id, field by field.
 // New ids are appended; { "id": "f8", "omit": true } removes a default.
 for (const k of ["institutional", "family", "gates"]) {
-  const given: any[] = Array.isArray(report.rubric[k]) ? report.rubric[k] : [];
+  const given = Array.isArray(report.rubric[k]) ? report.rubric[k] : [];
   const byId = new Map(given.map((c) => [c.id, c]));
-  const merged = defaults[k].map((d: any) => ({ ...d, ...(byId.get(d.id) ?? {}) }));
-  const known = new Set(defaults[k].map((d: any) => d.id));
+  const merged = defaults[k].map((d) => ({ ...d, ...(byId.get(d.id) ?? {}) }));
+  const known = new Set(defaults[k].map((d) => d.id));
   for (const c of given) if (!known.has(c.id)) merged.push(c);
   for (const c of merged) {
     if (c.omit) continue;
     if (!c.id || !c.label) errors.push(`rubric.${k}: entry needs id and label: ${JSON.stringify(c).slice(0, 80)}`);
     if (k !== "gates" && (!Array.isArray(c.a) || c.a.length !== 3)) errors.push(`rubric.${k}.${c.id}: "a" must list what 1, 3 and 5 look like`);
   }
-  report.rubric[k] = merged.filter((c: any) => !c.omit);
+  report.rubric[k] = merged.filter((c) => !c.omit);
 }
 report.rubric.evidence = report.rubric.evidence ?? {};
 
-const schools: any[] = Array.isArray(report.schools) ? report.schools : [];
+const schools = Array.isArray(report.schools) ? report.schools : [];
 if (!schools.length) errors.push("schools: the report has no schools");
-const ids = new Set<string>();
+const ids = new Set();
 for (const s of schools) {
   if (!s.id || !s.name) errors.push(`school missing id or name: ${JSON.stringify(s).slice(0, 80)}`);
   if (ids.has(s.id)) errors.push(`duplicate school id: ${s.id}`);
@@ -58,7 +56,7 @@ const finalists = schools.filter((s) => s.tier === "finalist").length;
 if (finalists === 0) warnings.push("no finalists: the rubric will use the first six schools");
 if (finalists > 7) warnings.push(`${finalists} finalists: the rubric matrix gets wide past 6`);
 
-const refCheck = (where: string, id: string) => {
+const refCheck = (where, id) => {
   if (!ids.has(id)) errors.push(`${where}: unknown schoolId "${id}"`);
 };
 for (const r of report.summary?.recommendation ?? []) refCheck("summary.recommendation", r.schoolId);
@@ -68,17 +66,17 @@ for (const d of report.deadlines ?? []) {
 }
 for (const e of report.essays ?? []) refCheck("essays", e.schoolId);
 
-const critIds = new Set<string>([...report.rubric.institutional, ...report.rubric.family].map((c: Crit) => c.id));
-for (const [sid, m] of Object.entries<any>(report.rubric.evidence)) {
+const critIds = new Set([...report.rubric.institutional, ...report.rubric.family].map((c) => c.id));
+for (const [sid, m] of Object.entries(report.rubric.evidence)) {
   refCheck("rubric.evidence", sid);
-  for (const [cid, v] of Object.entries<any>(m)) {
+  for (const [cid, v] of Object.entries(m)) {
     if (!critIds.has(cid)) errors.push(`rubric.evidence.${sid}: unknown criterion "${cid}"`);
     if (!Array.isArray(v) || v.length !== 2 || !(v[0] === null || (v[0] >= 1 && v[0] <= 5)))
       errors.push(`rubric.evidence.${sid}.${cid}: must be [1-5 or null, "text"]`);
   }
 }
 for (const k of ["institutional", "family"]) {
-  const sum = report.rubric[k].reduce((a: number, c: Crit) => a + (c.w || 0), 0);
+  const sum = report.rubric[k].reduce((a, c) => a + (c.w || 0), 0);
   if (sum !== 100) warnings.push(`rubric.${k}: weights sum to ${sum}, expected 100`);
 }
 

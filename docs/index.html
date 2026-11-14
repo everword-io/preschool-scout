@@ -427,7 +427,7 @@ $("#reweight").addEventListener("click",e=>{
 /* ---------- ask ---------- */
 $("#pane-ask").innerHTML=`<h2>Ask about these schools</h2>
   <p class="lede">Questions are answered from this report only. If the research didn't find something, the answer says so and suggests what to ask the school.</p>
-  <div class="card ai"><div id="askOff" class="meta">Asking works when this page is open in Claude. Everything else on the page works anywhere.</div>
+  <div class="card ai"><div id="askOff" class="meta">Asking questions is available when this report is published as a claude.ai Artifact. Everything else on this page works in any browser.</div>
     <div id="askOn" hidden><textarea id="q" rows="3" placeholder="Which finalists have full-day care past 5pm, and what do they cost?"></textarea>
     <div class="row"><button class="btn primary" id="askGo" type="button">Ask</button><button class="btn" id="askStop" type="button" hidden>Stop</button></div>
     <div id="ans" class="out" style="margin-top:12px" aria-live="polite"></div></div></div>`;
@@ -470,7 +470,7 @@ if(!location.hash){try{const t=localStorage.getItem("scout.tab");if(t)history.re
 route(); raters={local:mine}; renderRubric(); renderEssays();
 (async()=>{
   const c=window.claude;
-  if(!c||!c.use){localMode("Scores and essay edits save on this device only. Open this page in Claude to share them.");return;}
+  if(!c||!c.use){localMode("Scores and essay edits save in this browser only.");return;}
   c.use("sample").then(fn=>{if(fn){sampleFn=fn;showAI();}}).catch(()=>{});
   try{[db,user]=await Promise.all([c.use("db"),c.use("user")]);}catch(e){db=null;}
   if(!db){localMode("Scores and essay edits save on this device only. Sign in to Claude to share them.");return;}

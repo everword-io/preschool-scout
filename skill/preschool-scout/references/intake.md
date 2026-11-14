@@ -2,8 +2,8 @@
 
 Ask these in one message, numbered, so the parent can answer in a few lines. Say which ones are optional. If they skip something, use the default and note the assumption in `family.notes`.
 
-1. **Where is home?** A cross-street or neighborhood plus zip code. (Required. Never put a full street address in the report.)
-2. **Your child's first name and birth date.** (Required for age cutoffs. The first name appears in the report; skip it if you'd rather not.)
+1. **Where is home?** A cross-street or neighborhood plus zip code. (Required. A zip code alone is too coarse for walking distances: ask once for a cross-street, and if they decline, measure from the zip code's center and say so. Never put a full street address in the report.)
+2. **Your child's birth date**, and optionally their first name. (The birth date is required for age cutoffs. The first name appears in the report only if they give it; otherwise use "your child".)
 3. **When do you want them to start?** Default: the fall after they turn 3 if they're under 3 now, otherwise next fall.
 4. **What teaching style do you want?** Examples: play-based, Montessori, Reggio Emilia, Waldorf, Vygotsky-style scaffolding (teachers build on what a child can almost do), arts-led, nature-based, language immersion, academic, faith-based. "Not sure" is fine; then describe what a great day looks like.
 5. **What matters most?** Pick a few: walkable, full day, outdoor time, small ratios, bilingual staff, diversity, low parent-volunteer demands, kindergarten placement, cost, privacy of photos.

@@ -9,7 +9,7 @@ Build the candidate list from several sources, then dedupe by name and address.
 3. **Local directories and listings**: city early-education departments, Winnie, parent-forum threads. Treat these as leads only.
 4. **Schools the family named.** Always include them.
 
-Drop home daycares unless the family wants them, and drop programs that don't serve the child's age at the start date. Compute distances with `scripts/distance.ts` or any geocoder; report straight-line miles and a rough walk time, and say they're estimates.
+Drop home daycares unless the family wants them, and drop programs that don't serve the child's age at the start date. Compute distances with `node scripts/distance.mjs` or any geocoder; report straight-line miles and a rough walk time, and say they're estimates.
 
 ## Per school
 
@@ -53,8 +53,8 @@ Outside California, use the state's licensing lookup and map its categories to "
 
 Most independent preschools are 501(c)(3) nonprofits and file IRS Form 990, which is public.
 
-1. Find the EIN: `bun scripts/propublica.ts search "<name>" CA`. Try the legal name, shorter names, and "nursery school". Church-run schools often file under the church and won't appear; set `status: "church"` and `tier: "unknown"`.
-2. Pull the history: `bun scripts/propublica.ts filings <EIN>`.
+1. Find the EIN: `node scripts/propublica.mjs search "<name>" CA`. Try the legal name, shorter names, and "nursery school". Church-run schools often file under the church and won't appear; set `status: "church"` and `tier: "unknown"`.
+2. Pull the history: `node scripts/propublica.mjs filings <EIN>`.
 3. Judge, using the newest year with figures (the script prints it first and warns if newer filings lack figures):
    - **fragile**: negative net assets, two or more deficit years in the last three, or prepaid tuition exceeding cash
    - **strong**: net assets above a year of expenses and no deficit in the newest year

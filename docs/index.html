@@ -1,0 +1,484 @@
+<title>Preschool Scout</title>
+<style>
+:root{
+  --paper:#f7f3ec;--card:#fffdf8;--ink:#1f1d1a;--ink-2:#5b5650;--rule:#e2dbcf;--accent:#2f6b5a;--accent-ink:#fff;
+  --go:#2f7a4f;--go-bg:#e3f1e7;--warn:#9a6a12;--warn-bg:#f8edd6;--crit:#a3372b;--crit-bg:#f7e1dd;--muted-bg:#eee8de;
+  --display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#171614;--card:#201f1c;--ink:#ece7de;--ink-2:#a9a297;--rule:#36332e;--accent:#6fb59d;--accent-ink:#10201a;
+  --go:#7cc79a;--go-bg:#1f3327;--warn:#e0b25c;--warn-bg:#3a2f18;--crit:#ef8f80;--crit-bg:#3d221e;--muted-bg:#2a2824;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#171614;--card:#201f1c;--ink:#ece7de;--ink-2:#a9a297;--rule:#36332e;--accent:#6fb59d;--accent-ink:#10201a;
+  --go:#7cc79a;--go-bg:#1f3327;--warn:#e0b25c;--warn-bg:#3a2f18;--crit:#ef8f80;--crit-bg:#3d221e;--muted-bg:#2a2824;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--body)}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header.top{padding:28px 0 0}
+.tabbar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+.eyebrow{font:12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+h1{font:600 clamp(28px,5vw,40px)/1.1 var(--display);margin:6px 0 6px}
+h2{font:600 24px/1.2 var(--display);margin:34px 0 10px}
+h3{font:600 18px/1.3 var(--display);margin:0 0 6px}
+.sub{color:var(--ink-2);margin:0 0 14px}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;padding:10px 12px;text-decoration:none;color:var(--ink-2);border-bottom:2px solid transparent;font-weight:500;font-size:15px}
+nav.tabs a[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+main{padding:8px 0 64px}
+.pane[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:16px 18px}
+.card+.card{margin-top:12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.lede{font-size:18px;max-width:70ch}
+.meta,.src{color:var(--ink-2);font-size:14px}
+.banner{border-radius:10px;padding:10px 14px;background:var(--muted-bg);font-size:14px;margin:12px 0}
+.banner.warn{background:var(--warn-bg);color:var(--warn)}
+.banner.sample{background:var(--warn-bg);color:var(--warn);font-weight:600}
+.pill{display:inline-block;border-radius:999px;padding:1px 9px;font:600 12.5px/1.6 var(--body);white-space:nowrap}
+.pill.hi,.pill.low-risk,.pill.strong{background:var(--go-bg);color:var(--go)}
+.pill.mid,.pill.medium-risk,.pill.steady{background:var(--warn-bg);color:var(--warn)}
+.pill.lo,.pill.high-risk,.pill.fragile{background:var(--crit-bg);color:var(--crit)}
+.pill.na,.pill.unknown,.pill.unknown-risk{background:var(--muted-bg);color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:0;list-style:none}
+.chips li{background:var(--muted-bg);border-radius:999px;padding:2px 10px;font-size:14px}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{font:600 12px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2);white-space:nowrap}
+tbody tr:last-child>*{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+dl.facts{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:10px 0;font-size:14.5px}
+dl.facts dt{color:var(--ink-2)}
+dl.facts dd{margin:0}
+.school,.essay,.card[id]{scroll-margin-top:60px}
+.school .head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.two{grid-template-columns:1fr}dl.facts{grid-template-columns:1fr}dl.facts dt{margin-top:6px}}
+ul.tight{margin:4px 0;padding-left:20px}
+details>summary{cursor:pointer}
+.past{opacity:.55}
+.btn{font:600 14px/1 var(--body);border-radius:8px;border:1px solid var(--rule);background:var(--card);color:var(--ink);padding:9px 14px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.5;cursor:default}
+textarea,input[type=text]{width:100%;font:15px/1.5 var(--body);color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ai{border-left:3px solid var(--accent)}
+.ai-off{display:none}
+.out{white-space:pre-wrap}
+/* rubric matrix */
+.mxbox{overflow-x:auto;border:1px solid var(--rule);border-radius:12px;background:var(--card)}
+.mx{min-width:640px}
+.mx th.mx-c{position:sticky;left:0;background:var(--card);min-width:210px;max-width:260px;font:500 14px/1.35 var(--body);text-transform:none;letter-spacing:0;color:var(--ink);white-space:normal;z-index:1}
+.mx thead th.mx-s{white-space:normal;min-width:118px}
+.mx-cell{white-space:nowrap}
+.mini{display:inline-flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden}
+.mini button{border:0;border-right:1px solid var(--rule);background:transparent;color:var(--ink);font:600 13px/1 var(--body);padding:7px 0;width:22px;cursor:pointer}
+.mini.pf button{width:auto;padding:7px 8px}
+.mini button:last-child{border-right:0}
+.mini button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.rec{display:block;font:11px/1.6 var(--mono);color:var(--ink-2)}
+.w{font:600 12px var(--mono);color:var(--ink-2)}
+.mx-d{font-size:13.5px;color:var(--ink-2);margin-top:6px}
+.mx-d ul{padding-left:18px;margin:6px 0 0}
+.notes{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.notes label span{display:block;font-weight:600;font-size:14px;margin-bottom:4px}
+.essay textarea{min-height:220px}
+.wc{font:12px var(--mono);color:var(--ink-2)}
+.wc.over{color:var(--crit)}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="eyebrow" id="eyebrow"></div>
+  <h1 id="title">Preschool Scout</h1>
+  <p class="sub" id="sub"></p>
+</div></header>
+<div class="tabbar"><div class="wrap"><nav class="tabs" id="tabs" role="tablist" aria-label="Report sections"></nav></div></div>
+
+<main class="wrap">
+  <div id="sampleBanner" class="banner sample" hidden>Sample report. The family and every school on this page are fictional.</div>
+  <section id="pane-overview" class="pane"></section>
+  <section id="pane-schools" class="pane" hidden></section>
+  <section id="pane-deadlines" class="pane" hidden></section>
+  <section id="pane-finances" class="pane" hidden></section>
+  <section id="pane-rubric" class="pane" hidden></section>
+  <section id="pane-essays" class="pane" hidden></section>
+  <section id="pane-ask" class="pane" hidden></section>
+  <section id="pane-sources" class="pane" hidden></section>
+</main>
+
+<script id="report-data" type="application/json">{"meta":{"title":"Nia's Preschool Plan","cycle":"Fall 2027 entry","generated":"2026-11-11","sample":true,"home":{"label":"Near 24th and Guerrero","zip":"94110"}},"family":{"child":{"name":"Nia","birthdate":"2024-08-14","startTerm":"Aug-Sep 2027, age 3"},"approach":["Play-based","Arts-led","Vygotsky-style scaffolding"],"priorities":["Outdoor time every day","Walkable","Bilingual staff","Full day for two working parents"],"languages":["English","Yoruba"],"budget":"Up to about $35K a year","schedule":"Full day, 8:30 to 5:30, five days","kTargets":["Any strong public K","Two independent K-8s"],"notes":"Both parents work in-office three days a week."},"summary":{"headline":"Two clear favorites, one safety, one to watch","body":["Juniper Lane and the Clay & Paint Studio School both teach the way you described: teachers build on what children are already doing, and art is the main way children explore ideas. Juniper Lane is the safer institution. The Studio School is the closer match in the classroom but runs thin on cash.","Dolores Park Cooperative is the most affordable and has the best ratios, but the co-op shifts do not fit two in-office parents. Treehouse Montessori is strong on paper and on kindergarten placement; tour it to see whether the Montessori work cycle feels right for Nia."],"recommendation":[{"schoolId":"jl","why":"Best overall: the teaching style you want, a ten-year average teacher tenure, and a year of cash in reserve."},{"schoolId":"cps","why":"The closest classroom match, a four-minute walk. Apply early: admission is rolling, so timing counts."},{"schoolId":"tm","why":"Strongest kindergarten placement record. Tour before deciding whether the approach fits."},{"schoolId":"dpc","why":"Keep only if one parent can take a weekly classroom shift."}]},"schools":[{"id":"jl","name":"Juniper Lane Preschool","shortName":"Juniper Lane","tier":"finalist","address":"Sample address, Mission District","distanceMi":0.4,"walkMin":8,"website":"https://example.org/juniper-lane","approach":"Play-based with Vygotsky-style scaffolding; documented project work","ages":"2.9 to 5","ratio":"1:6, groups of 18","hours":"8:00 to 5:30","tuition":{"amount":"$31,800 full day","year":"2026-27","confidence":"confirmed"},"admissions":{"type":"cycle","tourRequired":true,"applicationFee":"$100","notes":"Notifications mid-March"},"programs":[{"name":"Threes","ages":"2.9 to 3.9","schedule":"Full or half day","notes":"Must be toilet-learning, not fully trained"},{"name":"Pre-K","ages":"4 to 5","schedule":"Full day","notes":"Weekly studio with an art teacher"}],"fit":{"score":5,"why":"Teachers co-play and narrate, then step back; the studio is part of every week. This is the scaffolding style you asked for."},"kPlacement":{"published":true,"summary":"Publishes a three-year list: 14 public and 9 independent schools."},"licensing":{"typeA":0,"typeB":1,"summary":"One Type B (2024, a missing outlet cover), corrected the same day.","url":"https://example.org/licensing/jl"},"finances":{"status":"nonprofit","ein":"00-0000001","tier":"strong","fy":2025,"revenue":2450000,"expenses":2310000,"netAssets":2900000,"cashMonths":12,"summary":"A year of cash in reserve and three years of small surpluses.","flags":[]},"longevity":{"risk":"low","why":"Strong reserves, stable enrollment."},"pros":["Exactly the teaching style you want","Ten-year average teacher tenure","Healthy reserves"],"cons":["Tour required, and tours fill fast","No bilingual staff in the threes room"],"askOnTour":["Which lead teacher would Nia have?","How do teachers decide when to step in during play?","Any Yoruba or other West African languages among staff or families?"],"sources":[{"label":"School site (sample)","url":"https://example.org/juniper-lane"}]},{"id":"cps","name":"Clay & Paint Studio School","shortName":"Studio School","tier":"finalist","address":"Sample address, Mission District","distanceMi":0.2,"walkMin":4,"website":"https://example.org/studio-school","approach":"Arts-led, Reggio-inspired; teachers extend children's ideas through materials","ages":"3 to 5","ratio":"1:5","hours":"8:30 to 5:30, year-round","tuition":{"amount":"$33,600 full day","year":"2026-27","confidence":"third-party listing"},"admissions":{"type":"rolling","tourRequired":false,"notes":"Places offered as spaces open; date of application matters"},"programs":[{"name":"Mixed-age studio","ages":"3 to 5","schedule":"Full day, year-round","notes":"Must be fully toilet-trained"}],"fit":{"score":5,"why":"The closest classroom match: art is the curriculum, not an add-on, and teachers work right at the edge of what each child can do."},"kPlacement":{"published":false,"summary":"No list published. The director says she helps families apply."},"licensing":{"typeA":0,"typeB":3,"summary":"Three Type B citations in two years, two about supervision ratios.","url":"https://example.org/licensing/cps"},"finances":{"status":"nonprofit","ein":"00-0000002","tier":"fragile","fy":2025,"revenue":980000,"expenses":1040000,"netAssets":-45000,"cashMonths":1.5,"summary":"Negative net assets and about six weeks of cash. Prepaid tuition is carrying the school.","flags":["Negative net assets","Deficit two years running"]},"longevity":{"risk":"high","why":"Thin cash and a shrinking payroll."},"pros":["Four-minute walk","Teaching style is the closest match","Year-round full day"],"cons":["Fragile finances","Supervision citations","Tuition figure not confirmed by the school"],"askOnTour":["How many adults are on the floor at 4:30?","What changed after the supervision citations?","What is the plan if enrollment drops?"],"sources":[{"label":"School site (sample)","url":"https://example.org/studio-school"}]},{"id":"tm","name":"Treehouse Montessori","shortName":"Treehouse","tier":"finalist","address":"Sample address, Noe Valley","distanceMi":0.9,"walkMin":18,"website":"https://example.org/treehouse","approach":"Traditional Montessori, mixed-age primary","ages":"2.10 to 6","ratio":"1:8 work cycle, 1:6 afternoons","hours":"8:00 to 5:30","tuition":{"amount":"$29,400 full day","year":"2026-27","confidence":"confirmed"},"admissions":{"type":"cycle","tourRequired":true,"applicationFee":"$150","notes":"Essays weigh heavily; no child interview"},"programs":[{"name":"Primary","ages":"2.10 to 6","schedule":"Half or full day","notes":"Must be fully toilet-trained at entry"}],"fit":{"score":3,"why":"Excellent program, but the independent work cycle is a different philosophy from the scaffolded, social play you described."},"kPlacement":{"published":true,"summary":"Strongest list in the area: 21 independent and 12 public schools."},"licensing":{"typeA":0,"typeB":0,"summary":"Clean record in five years.","url":"https://example.org/licensing/tm"},"finances":{"status":"nonprofit","ein":"00-0000003","tier":"steady","fy":2025,"revenue":3100000,"expenses":3020000,"netAssets":1800000,"cashMonths":6,"summary":"About six months of reserves; revenue up two years running.","flags":[]},"longevity":{"risk":"low","why":"Steady finances and a long waitlist."},"pros":["Best kindergarten placement record","Seventeen-year average teacher tenure","Clean licensing record"],"cons":["Philosophy is a partial match","18-minute walk"],"askOnTour":["How much collaborative play happens in a typical day?","How do teachers support a child who prefers working with friends?"],"sources":[{"label":"School site (sample)","url":"https://example.org/treehouse"}]},{"id":"dpc","name":"Dolores Park Cooperative Nursery","shortName":"Dolores Co-op","tier":"finalist","address":"Sample address, Mission Dolores","distanceMi":0.6,"walkMin":12,"website":"https://example.org/dolores-coop","approach":"Play-based parent cooperative","ages":"2.9 to 5","ratio":"1:4 with a parent in every room","hours":"9:00 to 3:30; extended care to 5:00","tuition":{"amount":"$14,200 full day","year":"2026-27","confidence":"confirmed"},"admissions":{"type":"cycle","tourRequired":true,"applicationFee":"$50","notes":"Sibling and alumni priority"},"programs":[{"name":"Threes and fours","ages":"2.9 to 5","schedule":"Half or full day","notes":"Weekly three-hour parent shift"}],"fit":{"score":3,"why":"The play-based approach fits, but the weekly classroom shift does not fit two in-office parents."},"kPlacement":{"published":false,"summary":"No list published."},"licensing":{"typeA":0,"typeB":1,"summary":"One Type B in 2023, resolved.","url":"https://example.org/licensing/dpc"},"finances":{"status":"nonprofit","ein":"00-0000004","tier":"steady","fy":2024,"revenue":820000,"expenses":790000,"netAssets":610000,"cashMonths":8,"summary":"Small, debt-free, about eight months of reserves.","flags":[]},"longevity":{"risk":"low","why":"Debt-free with a loyal parent base."},"pros":["Lowest cost","Best ratios","Strong parent community"],"cons":["Weekly co-op shift","Ends at 5:00 with extended care"],"askOnTour":["Can the co-op shift be split or bought out?"],"sources":[{"label":"School site (sample)","url":"https://example.org/dolores-coop"}]},{"id":"bgs","name":"Bernal Garden School","shortName":"Bernal Garden","tier":"consider","address":"Sample address, Bernal Heights","distanceMi":1.3,"website":"https://example.org/bernal-garden","approach":"Nature-based, mostly outdoors","ages":"3 to 5","ratio":"1:7","hours":"8:30 to 3:00","tuition":{"amount":"$24,000","year":"2026-27","confidence":"confirmed"},"admissions":{"type":"cycle","tourRequired":false},"fit":{"score":4,"why":"Outdoor time every day is its whole program. The short day is the problem."},"kPlacement":{"published":false,"summary":"No list published."},"licensing":{"typeA":0,"typeB":0,"summary":"Clean."},"finances":{"status":"forprofit","tier":"unknown","summary":"For-profit; no public financials."},"longevity":{"risk":"unknown","why":"No public data."},"pros":["Outdoors every day"],"cons":["Ends at 3:00","A drive, not a walk"],"sources":[{"label":"School site (sample)","url":"https://example.org/bernal-garden"}]},{"id":"llc","name":"Little Lantern Learning Center","tier":"dropped","dropReason":"A Type A citation in 2025 (a child left unsupervised) and a large outstanding loan.","address":"Sample address, Mission District","distanceMi":0.5,"approach":"Academic preschool","licensing":{"typeA":1,"typeB":2,"summary":"Type A in 2025: a child left unsupervised."},"finances":{"status":"nonprofit","tier":"fragile","summary":"Negative net assets and a $400K loan."},"sources":[{"label":"School site (sample)","url":"https://example.org/little-lantern"}]}],"deadlines":[{"date":"2026-12-01","schoolId":"cps","what":"Apply early: rolling admission weighs your date","status":"confirmed"},{"date":"2026-12-15","schoolId":"tm","what":"Application and essays due","status":"confirmed"},{"date":"2027-01-10","schoolId":"jl","what":"Last tour","status":"to-confirm"},{"date":"2027-01-15","schoolId":"jl","what":"Application due","status":"confirmed"},{"date":"2027-01-31","schoolId":"dpc","what":"Application due","status":"confirmed"},{"date":"2027-03-12","schoolId":"jl","what":"Decisions released","status":"to-confirm"}],"financesSummary":{"headline":"One school to watch, the rest are healthy","body":["Three finalists have six months or more of reserves. The Studio School is the exception: it has spent more than it earned two years running and now owes families more in prepaid tuition than it holds in cash. That does not rule it out, but ask how it would handle a bad enrollment year."]},"rubric":{"evidence":{"jl":{"i4":[5,"Ten-year average teacher tenure."],"i5":[4,"1:6, groups of 18."],"i6":[4,"One minor citation, fixed the same day."],"i8":[5,"A year of cash in reserve."],"f1":[4,"Publishes a three-year K list."]},"cps":{"i5":[5,"1:5 stated."],"i6":[2,"Three Type B citations, two on supervision."],"i8":[1,"Negative net assets, six weeks of cash."],"f6":[null,"Four-minute walk; year-round full day."]},"tm":{"i4":[5,"Seventeen-year average teacher tenure."],"i6":[5,"Clean five-year record."],"i8":[4,"Six months of reserves."],"f1":[5,"Strongest K list in the area."]},"dpc":{"i5":[5,"1:4 with a parent in every room."],"i8":[4,"Debt-free, eight months of reserves."],"f5":[null,"Weekly three-hour parent shift."]}},"institutional":[{"id":"i1","w":20,"label":"Teacher-child interactions","src":"CLASS · NAEYC 1, 3","ask":"Watch a lead teacher for ten minutes. Do they kneel to eye level, ask open questions, build on what a child says, and settle conflict calmly?","a":["Directive, mostly managing behavior; little conversation","Warm, but talk is short exchanges","Sustained back-and-forth; teachers extend children's thinking"]},{"id":"i2","w":10,"label":"Classroom environment and daily rhythm","src":"ECERS-3 · NAEYC 9","ask":"Are materials open-ended and in reach? Is there real outdoor time? Does the day flow without long waits or whole-group sitting?","a":["Sparse or cluttered; lots of waiting","Adequate materials; some idle time","Rich, organized, child-accessible; daily outdoor play"]},{"id":"i3","w":10,"label":"Curriculum and tracking progress","src":"QCC elements 1-2 · NAEYC 2, 4","ask":"How do they document progress (portfolios, observations)? Do they screen development? How often do they share progress with parents?","a":["No documented approach","Informal notes; one conference a year","Written observations, screening, two or more conferences a year"]},{"id":"i4","w":15,"label":"Teacher qualifications and stability","src":"QCC element 3 · NAEYC 6","ask":"Lead teachers' degrees and ECE units? Average tenure? How many teachers left last year? Will your child's teachers likely still be there next fall?","a":["High turnover or minimal credentials","Mixed tenure; some degreed leads","Degreed leads, 7+ year average tenure, low turnover"]},{"id":"i5","w":10,"label":"Ratios and group size","src":"QCC element 5 · licensing","ask":"Adult-to-child ratio for three-year-olds, and total group size in one room.","a":["At the legal minimum","About 1:8","1:6 or better, groups of 16 or fewer"]},{"id":"i6","w":10,"label":"Health, safety and licensing record","src":"Licensing · NAEYC 5","ask":"Check the state record for serious (Type A) citations and complaints. Ask what changed after any citation.","a":["Serious citation or unresolved complaints","Minor citations only, explained","Clean record in the last five years"]},{"id":"i7","w":10,"label":"Leadership and governance","src":"QCC element 7 · NAEYC 10","ask":"How long has the director been in the role? Is the board independent of the director and founders? Does the school publish its financials?","a":["Recent churn or family-controlled board","Stable director, limited transparency","Tenured director, independent board, open books"]},{"id":"i8","w":10,"label":"Financial durability","src":"Form 990","ask":"Will the school be healthy through your child's last year? Look at reserves, the deficit trend and debt.","a":["Negative net assets or a large loan","Thin reserves, roughly break-even","A year or more of reserves, stable or growing"]},{"id":"i9","w":5,"label":"Family partnership","src":"NAEYC 7","ask":"How do teachers communicate day to day? Is there parent education? Are you welcome in the classroom?","a":["One-way notices","Regular updates","A real partnership: conferences, visits, parent programs"]}],"family":[{"id":"f1","w":15,"label":"Path to your kindergarten targets","src":"K placement","ask":"How many children applied to your target K-8 schools in the last three years, and how many were admitted? How does the director support the kindergarten application?","a":["No record, no guidance","Some acceptances, general K guidance","Documented placements and active, personal K counseling"]},{"id":"f2","w":20,"label":"Teaching style match","src":"Philosophy fit","ask":"Does what you see in the classroom match the approach you want (for example play-based, Montessori, Reggio, Vygotsky-style scaffolding, arts-led)?","a":["A different philosophy in practice","Partly aligned","Exactly what you hoped to see"]},{"id":"f3","w":15,"label":"The teacher your child would have","src":"Gut check","ask":"Meet the actual lead teacher for your child's age group. Can you picture your child thriving with this person for a year?","a":["No connection","Fine","Both parents want this person teaching your child"]},{"id":"f4","w":10,"label":"Values and community","src":"Values","ask":"Is there visible diversity of families? How does the school talk about kindness and inclusion? Does any faith framework fit what you want?","a":["A mismatch with your values","Neutral","An active match"]},{"id":"f5","w":10,"label":"Parent community and time demands","src":"Logistics","ask":"Required co-op hours, fundraising expectations, and whether these are families you'd enjoy for years.","a":["Demands you can't meet","Manageable","Light demands and families you'd seek out"]},{"id":"f6","w":10,"label":"Daily logistics","src":"Home and work","ask":"Walk or drive time, drop-off and pick-up versus your work hours, extended care, calendar and summer.","a":["Doesn't fit your week","Workable with help","Close and fits both schedules"]},{"id":"f7","w":5,"label":"Privacy and children's photos","src":"Values","ask":"Which app do they use for photos and messages? Do they post children publicly? Opt-in or opt-out?","a":["Public posting by default","Private app, opt-out","Private app, explicit opt-in"]},{"id":"f8","w":5,"label":"Home language and culture","src":"Values","ask":"If a home language matters, do classrooms reflect it, and are there bilingual staff?","a":["Not reflected","Welcomed","Actively supported"]},{"id":"f9","w":5,"label":"Cost and value","src":"Budget","ask":"Tuition, extended care, fees and the giving expectation, set against everything above.","a":["Poor value","Fair","Strong value"]},{"id":"f10","w":5,"label":"Would we both be happy choosing this school?","src":"Gut check","ask":"Answer after the tour, separately, before you compare notes.","a":["No","Maybe","Yes, without hesitation"]}],"gates":[{"id":"g1","label":"Your child is eligible on the start date (age cutoff, toilet training)"},{"id":"g2","label":"No serious licensing citation or unresolved substantiated complaint"},{"id":"g3","label":"No serious risk the school closes or shrinks before your child finishes"},{"id":"g4","label":"Any religious framework is acceptable to both parents"},{"id":"g5","label":"The photo and social media policy works for your family"}]},"essays":[{"schoolId":"jl","prompt":"Tell us about your child.","wordLimit":250,"draft":"Nia is a talker. She narrates whatever she is building, and when something falls over she tells us exactly what went wrong and what she will try next. She is cautious with new people for the first few minutes, then she is the one handing out jobs.\n\nWe were drawn to Juniper Lane because of how the teachers play alongside the children and then step back. [A MOMENT FROM THE TOUR]. That is how Nia learns best at home: when someone shows her one step and lets her take the next.\n\nAt home we speak English and Yoruba, and she switches between them depending on who she is talking to. [SOMETHING SHE LOVES TO MAKE]."},{"schoolId":"cps","prompt":"What should we know about your child?","wordLimit":200,"draft":"Nia thinks with her hands. Give her clay or a box of buttons and she will tell you a story about it. [HER FAVORITE MATERIAL].\n\nWe would love for her to be somewhere art is how children work through ideas, not a break from them. [WHY THE STUDIO SCHOOL]."}],"caveats":["This is sample data. Every school, number and date on this page is fictional.","In a real report, tuition marked \"third-party listing\" is approximate until the school confirms it."],"sources":[{"label":"IRS Form 990 search (ProPublica Nonprofit Explorer)","url":"https://projects.propublica.org/nonprofits/"},{"label":"California child care licensing search","url":"https://www.ccld.dss.ca.gov/carefacilitysearch/"}]}</script>
+<script>
+(function(){
+"use strict";
+const D=JSON.parse(document.getElementById("report-data").textContent);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const S=D.schools||[]; const byId={}; S.forEach(s=>byId[s.id]=s);
+const nameOf=id=>(byId[id]&&byId[id].name)||id;
+const list=(a,cls)=>a&&a.length?`<ul class="${cls||"tight"}">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
+const money=v=>{if(v==null||v==="")return"";const n=+v;if(isNaN(n))return esc(v);const a=Math.abs(n),sg=n<0?"-":"";return a>=1e6?`${sg}$${(a/1e6).toFixed(a>=1e7?1:2)}M`:a>=1e3?`${sg}$${Math.round(a/1e3)}K`:`${sg}$${a}`;};
+const pill=(txt,cls)=>`<span class="pill ${cls}">${esc(txt)}</span>`;
+const fitPill=f=>f&&f.score?pill(`fit ${f.score}/5`,f.score>=4?"hi":f.score>=3?"mid":"lo"):"";
+const tiers={finalist:"Finalists",consider:"Also worth a look",dropped:"Dropped"};
+const today=new Date(); today.setHours(0,0,0,0);
+const parseDay=d=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d||"");return m?new Date(+m[1],+m[2]-1,+m[3]):null;};
+const fmtDay=d=>{const x=parseDay(d);return x?x.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}):esc(d);};
+const daysLeft=d=>{const x=parseDay(d);return x?Math.round((x-today)/864e5):null;};
+
+/* ---------- header + tabs ---------- */
+const M=D.meta||{}, F=D.family||{};
+document.title=M.title||"Preschool Scout";
+$("#title").textContent=M.title||"Preschool Scout";
+$("#eyebrow").textContent=["Preschool Scout",M.cycle,M.generated?"updated "+M.generated:""].filter(Boolean).join(" · ");
+$("#sub").textContent=[M.home&&M.home.label?"Home: "+M.home.label:"",F.child&&F.child.startTerm?"Start: "+F.child.startTerm:""].filter(Boolean).join(" · ");
+if(M.sample) $("#sampleBanner").hidden=false;
+const TABS=[["overview","Overview"],["schools","Schools"],["deadlines","Deadlines"],["finances","Finances"],["rubric","Rubric"],["essays","Essays"],["ask","Ask"],["sources","Sources"]];
+$("#tabs").innerHTML=TABS.map(([k,l])=>`<a href="#${k}" role="tab" data-tab="${k}">${l}</a>`).join("");
+function route(){
+  const [tab,anchor]=(location.hash.slice(1)||"overview").split(":");
+  const t=TABS.some(x=>x[0]===tab)?tab:"overview";
+  TABS.forEach(([k])=>{$("#pane-"+k).hidden=k!==t;});
+  document.querySelectorAll("#tabs a").forEach(a=>a.setAttribute("aria-selected",String(a.dataset.tab===t)));
+  if(anchor){const el=document.getElementById(t+"-"+anchor); if(el) setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:"start"}),30);}
+  else window.scrollTo(0,0);
+  try{localStorage.setItem("scout.tab",t);}catch(e){}
+}
+window.addEventListener("hashchange",route);
+
+/* ---------- overview ---------- */
+function upcoming(n){return (D.deadlines||[]).filter(d=>{const x=daysLeft(d.date);return x==null||x>=0;}).sort((a,b)=>String(a.date).localeCompare(String(b.date))).slice(0,n);}
+(function(){
+  const Sm=D.summary||{}, C=F.child||{};
+  const recs=(Sm.recommendation||[]).map(r=>`<li><a href="#schools:${esc(r.schoolId)}"><b>${esc(nameOf(r.schoolId))}</b></a>. ${esc(r.why)}</li>`).join("");
+  const nd=upcoming(4).map(d=>`<li><b>${fmtDay(d.date)}</b> · ${esc(nameOf(d.schoolId))}: ${esc(d.what)}</li>`).join("");
+  const glance=S.filter(s=>s.tier!=="dropped").map(s=>`<tr><td><a href="#schools:${esc(s.id)}">${esc(s.name)}</a></td><td>${esc(s.approach)}</td><td class="n">${s.distanceMi!=null?esc(s.distanceMi)+" mi":""}</td><td>${esc(s.tuition&&s.tuition.amount)}</td><td>${fitPill(s.fit)}</td></tr>`).join("");
+  $("#pane-overview").innerHTML=`
+    <h2>${esc(Sm.headline||"Summary")}</h2>
+    ${(Sm.body||[]).map(p=>`<p class="lede">${esc(p)}</p>`).join("")}
+    ${recs?`<div class="card"><h3>Where we'd focus</h3><ol class="tight">${recs}</ol></div>`:""}
+    <div class="two" style="margin-top:12px">
+      <div class="card"><h3>The family brief</h3>
+        <dl class="facts">
+          ${C.name?`<dt>Child</dt><dd>${esc(C.name)}${C.birthdate?", born "+esc(C.birthdate):""}</dd>`:""}
+          ${C.startTerm?`<dt>Start</dt><dd>${esc(C.startTerm)}</dd>`:""}
+          ${M.home&&M.home.label?`<dt>Home</dt><dd>${esc(M.home.label)}${M.home.zip?" ("+esc(M.home.zip)+")":""}</dd>`:""}
+          ${F.budget?`<dt>Budget</dt><dd>${esc(F.budget)}</dd>`:""}
+          ${F.schedule?`<dt>Schedule</dt><dd>${esc(F.schedule)}</dd>`:""}
+          ${F.kTargets&&F.kTargets.length?`<dt>K-8 targets</dt><dd>${esc(F.kTargets.join(", "))}</dd>`:""}
+          ${F.languages&&F.languages.length?`<dt>Languages</dt><dd>${esc(F.languages.join(", "))}</dd>`:""}
+        </dl>
+        ${F.approach&&F.approach.length?`<div class="meta">Teaching style wanted</div><ul class="chips">${F.approach.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+        ${F.priorities&&F.priorities.length?`<div class="meta" style="margin-top:10px">What matters most</div><ul class="chips">${F.priorities.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+      </div>
+      <div class="card"><h3>Coming up</h3>${nd?`<ul class="tight">${nd}</ul>`:'<p class="meta">No upcoming dates.</p>'}<p class="meta"><a href="#deadlines">All dates</a></p></div>
+    </div>
+    <h2>At a glance</h2>
+    <div class="tbl"><table><thead><tr><th>School</th><th>Approach</th><th class="n">Distance</th><th>Tuition</th><th>Fit</th></tr></thead><tbody>${glance}</tbody></table></div>`;
+})();
+
+/* ---------- schools ---------- */
+(function(){
+  const cmp=S.filter(s=>s.tier!=="dropped").map(s=>{const a=s.admissions||{},l=s.licensing||{};
+    return `<tr><td><a href="#schools:${esc(s.id)}"><b>${esc(s.name)}</b></a></td><td>${esc(s.ratio)}</td><td>${esc(s.ages)}</td><td>${esc(s.hours)}</td><td>${esc(s.tuition&&s.tuition.amount)}</td><td>${esc(a.type==="rolling"?"Rolling":a.type==="cycle"?"Annual cycle":a.type||"")}${a.tourRequired?" · tour required":""}</td><td>${l.typeA!=null?`A ${esc(l.typeA)} · B ${esc(l.typeB||0)}`:""}</td><td>${esc(s.kPlacement&&s.kPlacement.published?"Published":"Not published")}</td></tr>`;}).join("");
+  const card=s=>{const t=s.tuition||{},a=s.admissions||{},l=s.licensing||{},k=s.kPlacement||{};
+    const progs=(s.programs||[]).length?`<div class="tbl" style="margin:10px 0"><table><thead><tr><th>Program</th><th>Ages</th><th>Schedule</th><th>Notes</th></tr></thead><tbody>${s.programs.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.ages)}</td><td>${esc(p.schedule)}</td><td>${esc(p.notes)}</td></tr>`).join("")}</tbody></table></div>`:"";
+    return `<article class="card school" id="schools-${esc(s.id)}">
+      <div class="head"><div><h3>${esc(s.name)}</h3><div class="meta">${esc([s.address,s.distanceMi!=null?s.distanceMi+" mi":"",s.walkMin?"about "+s.walkMin+" min walk":"",s.website?"":""].filter(Boolean).join(" · "))}${s.website?` · <a href="${esc(s.website)}" target="_blank" rel="noopener">site</a>`:""}</div></div><div>${fitPill(s.fit)}</div></div>
+      ${s.fit&&s.fit.why?`<p>${esc(s.fit.why)}</p>`:""}
+      ${s.tier==="dropped"&&s.dropReason?`<p class="banner warn">Dropped: ${esc(s.dropReason)}</p>`:""}
+      <dl class="facts">
+        ${s.approach?`<dt>Approach</dt><dd>${esc(s.approach)}</dd>`:""}
+        ${s.ages?`<dt>Ages</dt><dd>${esc(s.ages)}</dd>`:""}
+        ${s.ratio?`<dt>Ratio</dt><dd>${esc(s.ratio)}</dd>`:""}
+        ${s.hours?`<dt>Hours</dt><dd>${esc(s.hours)}</dd>`:""}
+        ${t.unknown&&!t.amount?`<dt>Tuition</dt><dd>Not published. Ask on the tour.</dd>`:""}${t.amount?`<dt>Tuition</dt><dd>${esc(t.amount)}${t.year?" ("+esc(t.year)+")":""}${t.confidence&&t.confidence!=="confirmed"?" "+pill(t.confidence,"mid"):""}</dd>`:""}
+        ${a.type||a.notes?`<dt>Admissions</dt><dd>${esc([a.type==="rolling"?"Rolling":a.type==="cycle"?"Annual cycle":a.type,a.tourRequired?"tour required":"",a.applicationFee?"fee "+a.applicationFee:"",a.notes].filter(Boolean).join(" · "))}</dd>`:""}
+        ${l.summary?`<dt>Licensing</dt><dd>${esc(l.summary)}${l.url?` <a href="${esc(l.url)}" target="_blank" rel="noopener">record</a>`:""}</dd>`:""}
+        ${k.summary?`<dt>K placement</dt><dd>${esc(k.summary)}</dd>`:""}
+      </dl>
+      ${progs}
+      ${(s.pros||[]).length||(s.cons||[]).length?`<div class="two"><div><b>For</b>${list(s.pros)}</div><div><b>Against</b>${list(s.cons)}</div></div>`:""}
+      ${(s.askOnTour||[]).length?`<details style="margin-top:8px"><summary><b>Ask on the tour</b></summary>${list(s.askOnTour)}</details>`:""}
+      ${(s.sources||[]).length?`<p class="meta" style="margin-top:8px">Sources: ${s.sources.map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</p>`:""}
+    </article>`;};
+  const groups=Object.keys(tiers).map(t=>{const g=S.filter(s=>(s.tier||"consider")===t);return g.length?`<h2>${tiers[t]}</h2>${t==="dropped"?`<details><summary>${g.length} school${g.length>1?"s":""}</summary><div style="margin-top:10px">${g.map(card).join("")}</div></details>`:g.map(card).join("")}`:"";}).join("");
+  $("#pane-schools").innerHTML=`<h2>Side by side</h2><div class="tbl"><table><thead><tr><th>School</th><th>Ratio</th><th>Ages</th><th>Hours</th><th>Tuition</th><th>Admissions</th><th>Licensing</th><th>K list</th></tr></thead><tbody>${cmp}</tbody></table></div>${groups}`;
+})();
+
+/* ---------- deadlines ---------- */
+(function(){
+  const rows=(D.deadlines||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).map(d=>{const x=daysLeft(d.date);
+    const when=x==null?"":x<0?"passed":x===0?"today":x+" days";
+    return `<tr class="${x!=null&&x<0?"past":""}"><td style="white-space:nowrap"><b>${fmtDay(d.date)}</b></td><td>${esc(nameOf(d.schoolId))}</td><td>${esc(d.what)}</td><td>${d.status==="confirmed"?pill("confirmed","hi"):pill("to confirm","mid")}</td><td class="n">${when}</td></tr>`;}).join("");
+  $("#pane-deadlines").innerHTML=`<h2>The season, in order</h2><p class="meta">"To confirm" means the school has not posted the date for this cycle. Call or email before you rely on it.</p><div class="tbl"><table><thead><tr><th>Date</th><th>School</th><th>What</th><th>Status</th><th class="n">Left</th></tr></thead><tbody>${rows||'<tr><td colspan="5">No dates yet.</td></tr>'}</tbody></table></div>`;
+})();
+
+/* ---------- finances ---------- */
+(function(){
+  const order=["strong","steady","fragile","unknown"], label={strong:"Well funded",steady:"Steady",fragile:"Fragile",unknown:"No visibility"};
+  const fcard=s=>{const f=s.finances||{},lg=s.longevity||{};
+    return `<article class="card" id="finances-${esc(s.id)}"><div class="head" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3>${esc(s.name)}</h3><div>${pill(label[f.tier||"unknown"],f.tier||"unknown")} ${lg.risk?pill("closure risk: "+lg.risk,(lg.risk||"unknown")+"-risk"):""}</div></div>
+      <div class="meta">${esc([f.status==="nonprofit"?"Nonprofit":f.status==="forprofit"?"For-profit":f.status==="church"?"Church program (no separate filing)":f.status,f.ein?"EIN "+f.ein:"",f.fy?"FY"+f.fy:""].filter(Boolean).join(" · "))}</div>
+      ${f.revenue!=null||f.netAssets!=null?`<dl class="facts">${f.revenue!=null?`<dt>Revenue</dt><dd>${money(f.revenue)}</dd>`:""}${f.expenses!=null?`<dt>Expenses</dt><dd>${money(f.expenses)}</dd>`:""}${f.netAssets!=null?`<dt>Net assets</dt><dd>${money(f.netAssets)}</dd>`:""}${f.cashMonths!=null?`<dt>Cash</dt><dd>about ${esc(f.cashMonths)} months of expenses</dd>`:""}</dl>`:""}
+      ${f.summary?`<p>${esc(f.summary)}</p>`:""}${list(f.flags)}${lg.why?`<p class="meta">Longevity: ${esc(lg.why)}</p>`:""}</article>`;};
+  const Fn=D.financesSummary||{};
+  $("#pane-finances").innerHTML=`<h2>${esc(Fn.headline||"Money and staying power")}</h2>${(Fn.body||[]).map(p=>`<p class="lede">${esc(p)}</p>`).join("")}
+    <p class="meta">Figures come from each school's most recent IRS Form 990 where one exists. For-profit and church-run schools file nothing public, so their tier is "no visibility", which is not the same as weak.</p>
+    ${order.map(t=>{const g=S.filter(s=>s.tier!=="dropped"&&((s.finances||{}).tier||"unknown")===t);return g.length?`<h2>${label[t]}</h2><div class="grid">${g.map(fcard).join("")}</div>`:"";}).join("")}`;
+})();
+
+/* ---------- shared state (rubric scores, notes, weights, essay drafts) ---------- */
+const R=D.rubric||{institutional:[],family:[],gates:[],evidence:{}};
+const RS=S.filter(s=>s.tier==="finalist").length?S.filter(s=>s.tier==="finalist"):S.filter(s=>s.tier!=="dropped").slice(0,6);
+let myId="local", raters={}, names={}, db=null, user=null, canWrite=true, sampleFn=null;
+let mine={s:{},n:{},g:{},w:{},e:{},about:""};
+const norm=v=>({s:v.s||{},n:v.n||{},g:v.g||{},w:v.w||{},e:v.e||{},about:v.about||""});
+const W=c=>(mine.w&&mine.w[c.id]!=null)?mine.w[c.id]:c.w;
+function score100(map,lst,wfn){let ws=0,acc=0,tot=0;lst.forEach(c=>{const w=wfn?wfn(c):c.w;tot+=w;const v=map&&map[c.id];if(v>=1&&v<=5){ws+=w;acc+=w*v;}});if(!ws||!tot)return null;return{v:Math.round(((acc/ws)-1)/4*100),cov:Math.round(ws/tot*100)};}
+const cell=r=>r?`${pill(r.v,r.v>=80?"hi":r.v>=60?"mid":"lo")} <span class="src">[${r.cov}%]</span>`:'<span class="src">n/a</span>';
+const evOf=(sid,cid)=>((R.evidence||{})[sid]||{})[cid]||null;
+
+let saving=false,pending=false;
+async function save(){
+  if(!db){try{localStorage.setItem("scout.local",JSON.stringify(mine));setStatus("Saved on this device.");}catch(e){}return;}
+  if(saving){pending=true;return;} saving=true; setStatus("Saving…");
+  try{await db.doc("scores/"+myId).set(Object.assign({},mine,{updatedAt:new Date().toISOString()}));setStatus("Saved. Anyone you share this page with sees your scores.");}
+  catch(err){if(err&&(err.code==="invalid_argument"||err.code==="permission_denied"||err.code==="not_granted")){canWrite=false;setStatus("You can view scores but not save them. Ask the owner for Contributor access.");renderRubric();}else setStatus("Couldn't save just now. Your next change will try again.");}
+  saving=false; if(pending){pending=false;save();}
+}
+function setStatus(t){document.querySelectorAll(".saveStatus").forEach(el=>el.textContent=t);}
+let saveTimer=null; const saveSoon=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(save,900);};
+
+/* ---------- rubric ---------- */
+$("#pane-rubric").innerHTML=`
+  <h2>How to decide</h2>
+  <div class="card"><ol class="tight">
+    <li><b>Check the gates first.</b> A gate either parent marks "fail" takes a school off the list, however well it scores.</li>
+    <li><b>An institutional score of 70 or more</b> keeps a school in contention. Below that, family fit can't make up for program quality.</li>
+    <li><b>Rank by the combined score</b>: half institutional, half family, averaged across everyone who scores.</li>
+    <li><b>Apply as a portfolio.</b> Aim for two schools at 80 or more, plus one rolling-admission school as a timing hedge.</li>
+  </ol></div>
+  <h2>Where the criteria come from</h2>
+  <div class="grid">
+    <div class="card"><h3>State licensing</h3><p class="meta">The legal floor: ratios, supervision, training, health and safety. In California, Type A citations are immediate risk and Type B lower risk.</p></div>
+    <div class="card"><h3>Quality rating systems</h3><p class="meta">California's Quality Counts tiers 1 to 5 across child observation, screening, teacher qualifications, interactions, ratios, environment and director qualifications.</p></div>
+    <div class="card"><h3>NAEYC accreditation</h3><p class="meta">Ten national standards, from relationships and curriculum to families and leadership. A program must meet all ten.</p></div>
+    <div class="card"><h3>ECERS-3 and CLASS</h3><p class="meta">Observation scales for the room (ECERS-3) and for teacher-child interaction (CLASS). Interaction quality predicts children's outcomes best, and you can only see it in person, so it carries the most weight here.</p></div>
+  </div>
+  <h2>Score the shortlist</h2>
+  <div id="modeBanner" class="banner">Scores save on this device until the page connects.</div>
+  <div class="card ai ai-off" id="reweight"><h3>Adjust the weights in plain words</h3>
+    <p class="meta">Say what matters most, and Claude proposes new criterion weights. Nothing changes until you apply them.</p>
+    <textarea id="rwText" rows="2" placeholder="We care most about art and outdoor time, and a short walk matters more than the K list."></textarea>
+    <div class="row"><button class="btn primary" id="rwGo" type="button">Propose weights</button><button class="btn" id="rwReset" type="button">Reset to defaults</button><span class="meta" id="rwStatus" aria-live="polite"></span></div>
+    <div id="rwOut"></div></div>
+  <p class="meta">Rows are criteria, columns are schools. Tap a number to score and tap it again to clear. Open a criterion to see the tour question, what 1, 3 and 5 look like, and the public record. "record 4" is the evidence-only score from research, there as a reference.</p>
+  <div class="meta saveStatus" aria-live="polite"></div>
+  <div id="mxWrap" style="display:flex;flex-direction:column;gap:18px">
+    <div class="mxbox" id="mxInst"></div><div class="mxbox" id="mxFam"></div><div class="mxbox" id="mxGate"></div>
+  </div>
+  <h3 style="margin-top:22px">Notes by school</h3>
+  <div id="mxNotes" class="notes"></div>
+  <h2>Scoreboard</h2>
+  <p class="meta">Score out of 100, with coverage (the share of weight scored) in brackets. "Public record" uses only the evidence scores from research.</p>
+  <div class="tbl"><table id="board"></table></div>`;
+
+function matrix(lst,label){
+  const head=`<thead><tr><th class="mx-c">${label}</th>${RS.map(s=>`<th class="mx-s">${esc(s.shortName||s.name)}</th>`).join("")}</tr></thead>`;
+  const rows=lst.map(c=>{
+    const recs=RS.map(s=>{const e=evOf(s.id,c.id);return e?`<li><b>${esc(s.shortName||s.name)}${e[0]?": "+e[0]+"/5":""}.</b> ${esc(e[1])}</li>`:"";}).join("");
+    return `<tr><th scope="row" class="mx-c"><details data-k="${c.id}"><summary>${esc(c.label)} <span class="w">${W(c)}</span></summary><div class="mx-d"><p>${esc(c.ask)}</p><p><b>1</b> ${esc(c.a[0])} · <b>3</b> ${esc(c.a[1])} · <b>5</b> ${esc(c.a[2])}</p>${recs?`<ul>${recs}</ul>`:""}</div></details></th>`+
+      RS.map(s=>{const cur=((mine.s[s.id]||{})[c.id])||0,e=evOf(s.id,c.id);
+        return `<td class="mx-cell"><div class="mini" role="group" aria-label="${esc(c.label)}, ${esc(s.name)}">${[1,2,3,4,5].map(v=>`<button type="button" data-s="${s.id}" data-c="${c.id}" data-v="${v}" aria-pressed="${cur===v}" ${canWrite?"":"disabled"}>${v}</button>`).join("")}</div>${e&&e[0]?`<span class="rec" title="${esc(e[1])}">record ${e[0]}</span>`:""}</td>`;}).join("")+"</tr>";}).join("");
+  const tot=`<tr><th scope="row" class="mx-c"><b>Your score</b></th>${RS.map(s=>`<td>${cell(score100(mine.s[s.id],lst,W))}</td>`).join("")}</tr>`;
+  return `<table class="mx">${head}<tbody>${rows}${tot}</tbody></table>`;
+}
+function gateMatrix(){
+  const head=`<thead><tr><th class="mx-c">Gate</th>${RS.map(s=>`<th class="mx-s">${esc(s.shortName||s.name)}</th>`).join("")}</tr></thead>`;
+  const rows=(R.gates||[]).map(g=>`<tr><th scope="row" class="mx-c">${esc(g.label)}</th>${RS.map(s=>{const cur=((mine.g[s.id]||{})[g.id])||"";
+    return `<td class="mx-cell"><div class="mini pf" role="group" aria-label="${esc(g.label)}, ${esc(s.name)}"><button type="button" data-s="${s.id}" data-g="${g.id}" data-v="pass" aria-pressed="${cur==="pass"}" ${canWrite?"":"disabled"}>Pass</button><button type="button" data-s="${s.id}" data-g="${g.id}" data-v="fail" aria-pressed="${cur==="fail"}" ${canWrite?"":"disabled"}>Fail</button></div></td>`;}).join("")}</tr>`).join("");
+  return `<table class="mx">${head}<tbody>${rows}</tbody></table>`;
+}
+function renderBoard(){
+  const ids=Object.keys(raters);
+  const head='<thead><tr><th>School</th><th>Public record</th>'+ids.map(id=>`<th>${esc(names[id]||(id===myId?"You":"Parent"))}<br>Inst · Family</th>`).join("")+'<th>Gates</th><th>Combined</th></tr></thead>';
+  const rows=RS.map(s=>{const evMap={};Object.entries((R.evidence||{})[s.id]||{}).forEach(([k,v])=>{if(v[0])evMap[k]=v[0];});
+    const pub=score100(evMap,R.institutional); let comb=[],fails=0,passes=0;
+    const cells=ids.map(id=>{const r=raters[id]||{},wf=c=>((r.w||{})[c.id]!=null?r.w[c.id]:c.w);const a=score100((r.s||{})[s.id],R.institutional,wf),b=score100((r.s||{})[s.id],R.family,wf);
+      Object.values((r.g||{})[s.id]||{}).forEach(v=>{if(v==="fail")fails++;if(v==="pass")passes++;}); if(a&&b)comb.push((a.v+b.v)/2); return `<td>${cell(a)}<br>${cell(b)}</td>`;}).join("");
+    const gate=fails?pill("fail","lo"):passes?pill(passes+" pass","hi"):'<span class="src">unchecked</span>';
+    const c=comb.length?Math.round(comb.reduce((x,y)=>x+y,0)/comb.length):null;
+    return `<tr><td><b>${esc(s.name)}</b></td><td>${cell(pub)}</td>${cells}<td>${gate}</td><td>${c==null?'<span class="src">n/a</span>':pill(c,c>=80?"hi":c>=60?"mid":"lo")}</td></tr>`;}).join("");
+  $("#board").innerHTML=head+"<tbody>"+rows+"</tbody>";
+}
+function renderRubric(){
+  const open=new Set([...document.querySelectorAll("#mxWrap details[open]")].map(d=>d.dataset.k));
+  $("#mxInst").innerHTML=matrix(R.institutional||[],"Institutional"); $("#mxFam").innerHTML=matrix(R.family||[],"Family"); $("#mxGate").innerHTML=gateMatrix();
+  document.querySelectorAll("#mxWrap details").forEach(d=>{if(open.has(d.dataset.k))d.open=true;});
+  const box=$("#mxNotes");
+  if(!box.children.length) box.innerHTML=RS.map(s=>`<label><span>${esc(s.name)}</span><textarea data-note-s="${s.id}" rows="4" placeholder="Tour impressions, questions, gut feel"></textarea></label>`).join("");
+  box.querySelectorAll("textarea").forEach(t=>{if(document.activeElement!==t)t.value=((mine.n[t.dataset.noteS]||{})._)||"";t.disabled=!canWrite;});
+  renderBoard();
+}
+$("#mxWrap").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-s]"); if(!b||!canWrite)return; const sid=b.dataset.s;
+  if(b.dataset.c){const m=Object.assign({},mine.s[sid]),v=+b.dataset.v; if(m[b.dataset.c]===v)delete m[b.dataset.c]; else m[b.dataset.c]=v; mine.s[sid]=m;}
+  else {const m=Object.assign({},mine.g[sid]); if(m[b.dataset.g]===b.dataset.v)delete m[b.dataset.g]; else m[b.dataset.g]=b.dataset.v; mine.g[sid]=m;}
+  raters[myId]=mine; renderRubric(); save();
+});
+$("#mxNotes").addEventListener("input",e=>{const t=e.target;if(!t.dataset.noteS)return;mine.n[t.dataset.noteS]={_:t.value.slice(0,4000)};saveSoon();});
+
+/* ---------- essays ---------- */
+const ES=D.essays||[];
+$("#pane-essays").innerHTML=`
+  <h2>"Tell us about your child"</h2>
+  <p class="lede">A starting draft for each school's essay. Bracketed slots like [A MOMENT FROM THE TOUR] are details only you can supply. Edits save with your scores.</p>
+  <div class="card ai ai-off" id="aboutCard"><h3>About your child, in your words</h3>
+    <p class="meta">Write a paragraph the way you'd describe your child to a friend. "Redraft with Claude" uses only this paragraph and the school's record, and keeps a bracketed slot wherever it would otherwise have to invent something.</p>
+    <textarea id="about" rows="5" placeholder="She narrates everything she builds, wants to help in the kitchen, and is shy for the first ten minutes anywhere new."></textarea></div>
+  <div class="meta saveStatus" aria-live="polite"></div>
+  ${ES.map((x,i)=>`<article class="card essay" id="essays-${esc(x.schoolId)}" style="margin-top:12px">
+    <h3>${esc(nameOf(x.schoolId))}</h3>
+    ${x.prompt?`<p class="meta">Prompt: ${esc(x.prompt)}${x.wordLimit?` · up to ${esc(x.wordLimit)} words`:""}</p>`:""}
+    <textarea data-essay="${i}" aria-label="Essay for ${esc(nameOf(x.schoolId))}"></textarea>
+    <div class="row"><button class="btn" type="button" data-copy="${i}">Copy</button><button class="btn ai-off ai-btn" type="button" data-redraft="${i}">Redraft with Claude</button><button class="btn" type="button" data-reset="${i}">Reset to original</button><span class="wc" data-wc="${i}"></span><span class="meta" data-es="${i}" aria-live="polite"></span></div>
+  </article>`).join("")||'<p class="meta">No essays in this report yet.</p>'}`;
+const wc=t=>(t.trim().match(/\S+/g)||[]).length;
+function renderEssays(){
+  document.querySelectorAll("[data-essay]").forEach(t=>{const i=+t.dataset.essay;if(document.activeElement!==t)t.value=mine.e[i]!=null?mine.e[i]:(ES[i].draft||"");updWc(i);});
+  const a=$("#about"); if(a&&document.activeElement!==a)a.value=mine.about||"";
+}
+function updWc(i){const t=document.querySelector(`[data-essay="${i}"]`),el=document.querySelector(`[data-wc="${i}"]`),n=wc(t.value),lim=ES[i].wordLimit;el.textContent=n+" words"+(lim?" of "+lim:"");el.className="wc"+(lim&&n>lim?" over":"");}
+$("#pane-essays").addEventListener("input",e=>{const t=e.target;
+  if(t.dataset.essay!=null){mine.e[+t.dataset.essay]=t.value.slice(0,8000);updWc(+t.dataset.essay);saveSoon();}
+  else if(t.id==="about"){mine.about=t.value.slice(0,4000);saveSoon();}});
+$("#pane-essays").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.copy!=null){const t=document.querySelector(`[data-essay="${b.dataset.copy}"]`);try{await navigator.clipboard.writeText(t.value);b.textContent="Copied";}catch(_){t.select();b.textContent="Selected, press copy";}setTimeout(()=>b.textContent="Copy",1600);}
+  if(b.dataset.reset!=null){const i=+b.dataset.reset;delete mine.e[i];renderEssays();save();}
+  if(b.dataset.redraft!=null) redraft(+b.dataset.redraft,b);});
+
+/* ---------- Claude-powered helpers (only when the page runs inside Claude) ---------- */
+const errCopy=c=>c==="not_granted"?"Claude is turned off for this page.":c==="rate_limited"?"Claude is busy. Try again in a minute.":c==="cancelled"?"Stopped.":"Claude couldn't answer just now.";
+const STYLE="Write in plain, warm, specific language, the way a thoughtful parent talks. Never use em dashes. Avoid stock phrases such as 'delve', 'tapestry', 'foster', 'nurture a love of learning', 'journey', 'thrive' and 'vibrant'. Avoid lists of three adjectives. Short sentences are fine.";
+function schoolBrief(s){const x=Object.assign({},s);delete x.sources;return x;}
+async function redraft(i,btn){
+  if(!sampleFn)return; const x=ES[i],s=byId[x.schoolId]||{},st=document.querySelector(`[data-es="${i}"]`),t=document.querySelector(`[data-essay="${i}"]`);
+  btn.disabled=true; st.textContent="Thinking…";
+  const prompt=`You are helping parents write the "tell us about your child" answer on a preschool application.
+
+School record (JSON, from the parents' research):
+${JSON.stringify(schoolBrief(s))}
+
+What the family wants in a school: ${JSON.stringify({approach:F.approach,priorities:F.priorities,languages:F.languages})}
+
+The parents' own paragraph about their child:
+"""${(mine.about||"").slice(0,4000)}"""
+
+Current draft:
+"""${t.value.slice(0,8000)}"""
+
+Application prompt: ${x.prompt||"Tell us about your child."}
+Word limit: ${x.wordLimit||250}
+
+Rewrite the draft as the parents (we/our). Use only facts that appear in the parents' paragraph, the current draft, or the school record. Where a specific memory or detail would help and none is given, leave a bracketed slot in capitals, like [A MOMENT FROM THE TOUR]. Keep any existing bracketed slots the parents have not filled. Connect the child to something specific about this school's program. ${STYLE} Stay under the word limit. Reply with only the essay text.`;
+  try{const r=await sampleFn(prompt,{cache:false,onText:({text})=>{t.value=text;updWc(i);}});t.value=r.text.trim();mine.e[i]=t.value;updWc(i);st.textContent=r.truncated?"Cut short. Try again.":"Redrafted. Edit freely.";save();}
+  catch(err){if(err&&err.code==="not_granted")hideAI();st.textContent=errCopy(err&&err.code);renderEssays();}
+  btn.disabled=false;
+}
+let rwProposal=null;
+$("#rwGo").addEventListener("click",async()=>{
+  if(!sampleFn)return; const txt=$("#rwText").value.trim(); if(!txt){$("#rwStatus").textContent="Write a sentence first.";return;}
+  $("#rwGo").disabled=true; $("#rwStatus").textContent="Thinking…"; $("#rwOut").innerHTML="";
+  const crit=g=>(R[g]||[]).map(c=>({id:c.id,label:c.label,weight:W(c),ask:c.ask}));
+  const prompt=`A family is weighting criteria for choosing a preschool. They said:
+"""${txt.slice(0,1500)}"""
+
+Institutional criteria (weights sum to 100): ${JSON.stringify(crit("institutional"))}
+Family criteria (weights sum to 100): ${JSON.stringify(crit("family"))}
+
+Propose new integer weights reflecting what they said. Change only what their words justify; leave the rest close to current. Each group must sum to 100. No weight above 40. Reply with only JSON like {"weights":{"i1":20,"f1":15},"why":"one or two plain sentences"} including every id.`;
+  try{const r=await sampleFn.json(prompt,{cache:false});
+    const fix=g=>{const ids=(R[g]||[]).map(c=>c.id);let w=ids.map(id=>Math.max(0,Math.min(40,Math.round(+((r.weights||{})[id])||0))));const sum=w.reduce((a,b)=>a+b,0)||1;w=w.map(v=>Math.round(v*100/sum));let d=100-w.reduce((a,b)=>a+b,0);if(w.length){const k=w.indexOf(Math.max(...w));w[k]+=d;}const o={};ids.forEach((id,j)=>o[id]=w[j]);return o;};
+    rwProposal=Object.assign(fix("institutional"),fix("family"));
+    const all=[...(R.institutional||[]),...(R.family||[])];
+    $("#rwOut").innerHTML=`<p>${esc(r.why||"")}</p><div class="tbl"><table><thead><tr><th>Criterion</th><th class="n">Now</th><th class="n">Proposed</th></tr></thead><tbody>${all.map(c=>`<tr><td>${esc(c.label)}</td><td class="n">${W(c)}</td><td class="n"><b>${rwProposal[c.id]}</b></td></tr>`).join("")}</tbody></table></div><div class="row"><button class="btn primary" id="rwApply" type="button">Apply</button><button class="btn" id="rwDiscard" type="button">Discard</button></div>`;
+    $("#rwStatus").textContent="";
+  }catch(err){if(err&&err.code==="not_granted")hideAI();$("#rwStatus").textContent=errCopy(err&&err.code);}
+  $("#rwGo").disabled=false;
+});
+$("#reweight").addEventListener("click",e=>{
+  if(e.target.id==="rwApply"&&rwProposal){mine.w=rwProposal;rwProposal=null;$("#rwOut").innerHTML="";$("#rwStatus").textContent="Applied to your scores.";raters[myId]=mine;renderRubric();save();}
+  if(e.target.id==="rwDiscard"){rwProposal=null;$("#rwOut").innerHTML="";}
+  if(e.target.id==="rwReset"){mine.w={};raters[myId]=mine;renderRubric();save();$("#rwStatus").textContent="Back to the default weights.";}
+});
+
+/* ---------- ask ---------- */
+$("#pane-ask").innerHTML=`<h2>Ask about these schools</h2>
+  <p class="lede">Questions are answered from this report only. If the research didn't find something, the answer says so and suggests what to ask the school.</p>
+  <div class="card ai"><div id="askOff" class="meta">Asking works when this page is open in Claude. Everything else on the page works anywhere.</div>
+    <div id="askOn" hidden><textarea id="q" rows="3" placeholder="Which finalists have full-day care past 5pm, and what do they cost?"></textarea>
+    <div class="row"><button class="btn primary" id="askGo" type="button">Ask</button><button class="btn" id="askStop" type="button" hidden>Stop</button></div>
+    <div id="ans" class="out" style="margin-top:12px" aria-live="polite"></div></div></div>`;
+let askCtl=null;
+$("#askStop").addEventListener("click",()=>askCtl&&askCtl.abort());
+$("#askGo").addEventListener("click",async()=>{
+  const q=$("#q").value.trim(); if(!q||!sampleFn)return;
+  const ctx=JSON.stringify(Object.assign({},D,{essays:undefined})).slice(0,200000);
+  askCtl=new AbortController(); $("#askGo").disabled=true; $("#askStop").hidden=false; $("#ans").textContent="Thinking…";
+  const prompt=`You answer a parent's questions about preschools using ONLY the research report below (JSON). Today is ${today.toISOString().slice(0,10)}.
+If the report does not contain the answer, say so plainly and suggest the exact question to ask the school. Name schools and mention which source label supports a fact when one is given. Be brief and concrete. ${STYLE}
+
+REPORT:
+${ctx}
+
+QUESTION: ${q.slice(0,2000)}`;
+  try{const r=await sampleFn(prompt,{cache:false,signal:askCtl.signal,onText:({text})=>{$("#ans").textContent=text;}});$("#ans").textContent=r.text;}
+  catch(err){if(err&&err.code==="not_granted")hideAI();$("#ans").textContent=(err&&err.text?err.text+"\n\n":"")+errCopy(err&&err.code);}
+  $("#askGo").disabled=false; $("#askStop").hidden=true;
+});
+function showAI(){document.querySelectorAll(".ai-off").forEach(el=>el.classList.remove("ai-off"));$("#askOff").hidden=true;$("#askOn").hidden=false;}
+function hideAI(){sampleFn=null;document.querySelectorAll("#reweight,.ai-btn").forEach(el=>el.classList.add("ai-off"));$("#askOff").hidden=false;$("#askOn").hidden=true;}
+
+/* ---------- sources ---------- */
+(function(){
+  const per=S.filter(s=>(s.sources||[]).length).map(s=>`<li><b>${esc(s.name)}</b>: ${s.sources.map(x=>`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join(" · ")}</li>`).join("");
+  $("#pane-sources").innerHTML=`<h2>Before you rely on this</h2>${list(D.caveats)}
+    <h2>How this was made</h2><p>An AI research agent gathered each school's program, tuition and dates from the school's own pages, state licensing records, IRS Form 990 filings where they exist, and published kindergarten placement lists, then wrote the summary and essay drafts. It can be wrong. Confirm dates and fees with each school.</p>
+    ${(D.sources||[]).length?`<h2>General sources</h2><ul class="tight">${D.sources.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a></li>`).join("")}</ul>`:""}
+    ${per?`<h2>By school</h2><ul class="tight">${per}</ul>`:""}`;
+})();
+
+/* ---------- boot ---------- */
+function localMode(msg){
+  $("#modeBanner").className="banner warn"; $("#modeBanner").textContent=msg;
+  try{const l=JSON.parse(localStorage.getItem("scout.local")||"null");if(l)mine=norm(l);}catch(e){}
+  raters={local:mine}; names.local="You"; renderRubric(); renderEssays();
+}
+if(!location.hash){try{const t=localStorage.getItem("scout.tab");if(t)history.replaceState(null,"","#"+t);}catch(e){}}
+route(); raters={local:mine}; renderRubric(); renderEssays();
+(async()=>{
+  const c=window.claude;
+  if(!c||!c.use){localMode("Scores and essay edits save on this device only. Open this page in Claude to share them.");return;}
+  c.use("sample").then(fn=>{if(fn){sampleFn=fn;showAI();}}).catch(()=>{});
+  try{[db,user]=await Promise.all([c.use("db"),c.use("user")]);}catch(e){db=null;}
+  if(!db){localMode("Scores and essay edits save on this device only. Sign in to Claude to share them.");return;}
+  myId=(user&&await user.id())||"anon";
+  const w=user?await user.can("data.write"):null; if(w===false)canWrite=false;
+  $("#modeBanner").textContent=canWrite?"Shared scoring is on. Everyone you share this page with sees each other's totals in the scoreboard.":"You're viewing shared scores. Ask the owner for Contributor access to add yours.";
+  let got=false; const timer=setTimeout(()=>{if(!got)$("#modeBanner").textContent="Still loading shared scores. You can start; changes save when the connection is back.";},10000);
+  db.collection("scores").onSnapshot(async snap=>{
+    got=true; clearTimeout(timer);
+    const next={}; snap.docs.forEach(d=>{next[d.id]=norm(d.data()||{});});
+    if(next[myId]&&!saving&&!pending) mine=next[myId];
+    next[myId]=mine; raters=next;
+    try{const ps=await user.profiles(Object.keys(raters));Object.keys(raters).forEach(id=>{const p=ps&&ps[id];names[id]=id===myId?"You":((p&&p.name)||"Parent");});}catch(e){}
+    renderRubric(); renderEssays();
+  },err=>{clearTimeout(timer);localMode("Couldn't reach shared scores. Saving on this device for now.");});
+})();
+})();
+</script>

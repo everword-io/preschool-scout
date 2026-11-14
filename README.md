@@ -4,7 +4,9 @@ A Claude skill that researches preschools near a family's home and builds an int
 
 Give it your zip code and what you want in a school. Claude does the research with real lookups (school sites, state licensing records, IRS Form 990 filings) and fills one data file. A fixed page template draws the report from that file.
 
-**Sample report (fictional family and schools):** https://claude.ai/artifact/Go9heWFBvcFKakUFmr73ta (private; ask for access)
+**Sample report (fictional family and schools):** https://everword-io.github.io/preschool-scout/
+
+The sample runs as a plain web page, so shared scoring and the Claude features are off there. Everything else works.
 
 ## Use it
 
@@ -50,11 +52,13 @@ intake ─▶ discover candidates ─▶ check in ─▶ research each school �
 ## Develop
 
 ```sh
-bun run check   # render the sample to dist/ and syntax-check the page script
+bun run check   # render the sample to docs/index.html and syntax-check the page script
 bun run zip     # package the skill
 ```
 
 Edit the template once; every report picks it up on the next render.
+
+Push a `v*` tag and the release workflow builds the zip and publishes it.
 
 ## Limits
 

@@ -1,6 +1,6 @@
 // Syntax-check the inline script of a rendered report and confirm the data slot was filled.
 import { $ } from "bun";
-const path = process.argv[2] ?? "dist/sample-report.html";
+const path = process.argv[2] ?? "docs/index.html";
 const html = await Bun.file(path).text();
 if (html.includes("__REPORT_DATA__")) throw new Error("data slot not filled");
 const m = html.match(/<script>\n([\s\S]*)<\/script>/);

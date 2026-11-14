@@ -1,0 +1,19 @@
+name: release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun run check
+      - run: bun run zip
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")
+          gh release create "$GITHUB_REF_NAME" dist/preschool-scout.zip --title "$GITHUB_REF_NAME" --notes "$notes"

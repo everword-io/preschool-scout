@@ -8,7 +8,10 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const assets = join(here, "..", "assets");
 
-const [inPath, outArg] = process.argv.slice(2);
+// --favicon links favicon.png and apple-touch-icon.png next to the output (used by the public demo).
+const args = process.argv.slice(2);
+const favicon = args.includes("--favicon");
+const [inPath, outArg] = args.filter((a) => a !== "--favicon");
 if (!inPath) {
   console.error("usage: render.mjs <report.json> [out.html]");
   process.exit(2);
@@ -116,6 +119,6 @@ const json = JSON.stringify(report).replace(/</g, "\\u003c");
 const page = template.replace("__REPORT_DATA__", () => json);
 writeFileSync(
   outPath,
-  `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n</head>\n<body>\n${page}\n</body>\n</html>\n`,
+  `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n${favicon ? '<link rel="icon" type="image/png" href="favicon.png">\n<link rel="apple-touch-icon" href="apple-touch-icon.png">\n' : ""}</head>\n<body>\n${page}\n</body>\n</html>\n`,
 );
 console.log(`wrote ${outPath} (${schools.length} schools, ${finalists} finalists, ${warnings.length} warnings)`);

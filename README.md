@@ -4,9 +4,9 @@ A Claude skill that researches preschools near a family's home and builds an int
 
 Give it your zip code and what you want in a school. Claude does the research with real lookups (school sites, state licensing records, IRS Form 990 filings) and fills one data file. A fixed page template draws the report from that file.
 
-**Sample report (fictional family and schools):** https://everword-io.github.io/preschool-scout/
+**Sample report (fictional family and schools):** https://scout-demo.ourwhole.family
 
-The sample runs as a plain web page, so shared scoring and the Claude features are off there. Everything else works.
+The sample is a plain web page (deployed to Vercel from `docs/`), so shared scoring and the Claude features are off there. Everything else works.
 
 ## Use it
 

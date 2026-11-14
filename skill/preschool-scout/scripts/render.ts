@@ -99,5 +99,10 @@ const template = readFileSync(join(assets, "template.html"), "utf8");
 if (!template.includes("__REPORT_DATA__")) throw new Error("template is missing the __REPORT_DATA__ slot");
 // Escape "<" so no string in the data can close the <script> block.
 const json = JSON.stringify(report).replace(/</g, "\\u003c");
-writeFileSync(outPath, template.replace("__REPORT_DATA__", () => json));
+// A full document so the file renders correctly on its own (standards mode, phone viewport).
+const page = template.replace("__REPORT_DATA__", () => json);
+writeFileSync(
+  outPath,
+  `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n</head>\n<body>\n${page}\n</body>\n</html>\n`,
+);
 console.log(`wrote ${outPath} (${schools.length} schools, ${finalists} finalists, ${warnings.length} warnings)`);

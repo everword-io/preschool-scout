@@ -17,13 +17,13 @@ Every agent needs two things turned on: **web search** (or page fetching) and a 
 | Agent | Install | Notes |
 | --- | --- | --- |
 | claude.ai | Settings, then Capabilities: turn on code execution, upload the zip under Skills | Turn on web search in the chat |
-| Claude Code | `cp -R skill/preschool-scout ~/.claude/skills/` | Can publish the report as a claude.ai Artifact (see below) |
-| Codex | `cp -R skill/preschool-scout ~/.codex/skills/`, then restart Codex | Turn on web search and network access ([skills docs](https://developers.openai.com/codex/skills)) |
-| Gemini CLI, Cursor, others | Copy `skill/preschool-scout` into the skills folder your agent reads (many read `.agents/skills/`) | Check your agent's docs for the folder and for web access |
+| Claude Code | Unzip into `~/.claude/skills/` (or `cp -R skill/preschool-scout ~/.claude/skills/` from a clone) | Can publish the report as a claude.ai Artifact (see below) |
+| Codex | Unzip into `~/.codex/skills/` (or `cp -R skill/preschool-scout ~/.codex/skills/` from a clone), then restart Codex | Turn on web search and network access ([skills docs](https://developers.openai.com/codex/skills)) |
+| Gemini CLI, Cursor, others | Unzip into the skills folder your agent reads (many read `.agents/skills/`) | Check your agent's docs for the folder and for web access |
 
 Then ask: "Use preschool-scout to find preschools for my daughter near 94110."
 
-You get `report.html`. It opens in any browser, phones included. Research, the rubric (saved in that browser), essays and copy buttons all work offline.
+You get `report.html`: attached in claude.ai, or in a new folder such as `preschool-scout-94110/` in your working directory for terminal agents. It opens in any browser, phones included. Research, the rubric (saved in that browser), essays and copy buttons all work offline.
 
 Opening a clone of this repo in an agent works too: `AGENTS.md` points it at the skill.
 
@@ -72,4 +72,5 @@ Push a `v*` tag and the release workflow builds the zip and publishes it.
 - Licensing research is built around California's database. Other states work, with the state's own lookup and less detail.
 - Financials exist only for nonprofits. For-profit and church-run schools show "no visibility".
 - It's only as current as the schools' own websites. Dates not yet posted for this cycle are marked "to confirm".
+- Shared scoring between parents and the in-page assistant features need the report published as a claude.ai Artifact. Elsewhere, scores stay in the browser where they were entered.
 - An AI agent did the research. Confirm dates and fees with each school before relying on them.

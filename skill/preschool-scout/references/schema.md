@@ -8,10 +8,10 @@ meta
   cycle            "Fall 2027 entry"
   generated        date of this run
   sample           true only for fictional demo data
-  home             { label: "Near 24th and Guerrero", zip: "94110" }   no street numbers
+  home             { label: "Near 24th and Guerrero", zip: "94110", state: "CA" }   no street numbers
 
 family
-  child            { name, birthdate, startTerm }
+  child            { name, birthMonth: "2024-08", startTerm }   month and year only; the report is shared
   approach[]       teaching styles wanted
   priorities[]     what matters most
   languages[]
@@ -25,6 +25,11 @@ schools[]
   id               short stable slug, unique ("jl")
   name, shortName  shortName is used in narrow table headers
   tier             "finalist" | "consider" | "dropped"
+  sector           "independent" (default) | "public" (TK, district or state pre-K, city programs) | "head-start"
+  public           for public and Head Start programs:
+                   { program: "Transitional kindergarten", eligibility, enrollment, cost: "Free", eligible: "age-eligible" | "may qualify" | "not eligible" }
+                   eligibility in the program's own terms. "age-eligible" only when age and residency are the whole test;
+                   never the family's income or which private criterion they meet
   dropReason       required when dropped
   address          street address of the school (public)
   distanceMi       number, straight line from home
@@ -37,9 +42,14 @@ schools[]
   programs[]       { name, ages, schedule, notes }
   fit              { score: 1-5, why }    fit with THIS family's stated wants
   kPlacement       { published: bool, summary }
-  licensing        { facilityNumber, typeA: n, typeB: n, summary, url }   counts cover the whole window the state
-                   publishes; name the window in summary ("no citations in visits since 2021")
-  finances         { status: "nonprofit" | "forprofit" | "church" | "unknown", ein, tier: "strong" | "steady" | "fragile" | "unknown", fy, revenue, expenses, netAssets, cashMonths, summary, flags[] }
+  licensing        { facilityNumber, serious: n, minor: n, summary, url }   counts cover the whole window the state
+                   publishes; name the window in summary ("no serious violations in visits since 2021").
+                   The state guide in references/states/ maps its categories to serious and minor.
+                   (typeA/typeB are still accepted and read as serious/minor.)
+                   { exempt: true, summary } for a program not licensed as child care, such as TK in a public school
+                   unavailable: true when the record couldn't be reached or is incomplete (leave counts out)
+                   basis: "state" (default) | "researcher" when the state has no severity tiers and you classified findings
+  finances         { status: "nonprofit" | "forprofit" | "church" | "public" | "unknown", ein, tier: "strong" | "steady" | "fragile" | "unknown", fy, revenue, expenses, netAssets, cashMonths, summary, flags[] }
   longevity        { risk: "low" | "medium" | "high" | "unknown", why }
   pros[], cons[], askOnTour[]
   sources[]        { label, url }

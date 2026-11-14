@@ -4,7 +4,7 @@ The report's Rubric tab lets each parent score every finalist on two scorecards 
 
 ## Where the criteria come from
 
-- **State licensing** (Title 22 in California): the legal floor.
+- **State licensing** (each state's rules; see `states/`): the legal floor.
 - **Quality Counts California** and similar state rating systems: child observation, screening, teacher qualifications, interactions (CLASS), ratios, environment (ECERS), director qualifications.
 - **NAEYC accreditation**: ten standards, including relationships, curriculum, families, leadership.
 - **ECERS-3**: the room and the day.
@@ -31,16 +31,16 @@ In `rubric.evidence`, for each school id and criterion id: `[score, "one sentenc
 | i1 Interactions, i2 Environment, i3 Curriculum | No. Facts only (`null`) | Tour-only |
 | i4 Teachers | Yes | 5: 7+ year average tenure, degreed leads. 3: mixed. 1: high turnover |
 | i5 Ratios | Yes | 5: 1:6 or better and groups of 16 or fewer. 3: about 1:8. 1: legal minimum |
-| i6 Licensing | Yes | 5: clean five years. 4: one minor. 3: several minor. 2: a pattern on supervision. 1: any Type A |
+| i6 Licensing | Yes | 5: clean five years. 4: one minor. 3: several minor. 2: a pattern on supervision. 1: any serious violation (Type A in California, High risk in Texas, Serious risk in Ohio) |
 | i7 Leadership | Yes | 5: tenured director, independent board, open books. 3: stable but opaque. 1: churn or family-controlled |
-| i8 Finances | Yes | 5: a year of reserves. 4: six months. 3: thin. 2: deficits. 1: negative net assets or a big loan |
+| i8 Finances | Yes | 5: a year of reserves. 4: six months. 3: thin. 2: deficits. 1: negative net assets or a big loan. Public programs: `null` with "Does not apply: publicly funded" |
 | i9 Partnership | Rarely | Only if the school documents conferences and parent programs |
 | f1 K path | Yes, if a list exists | 5: published counts to the family's targets. 3: named on a list. 1: nothing |
 | f2-f10 | Facts only, usually | Parents' judgment |
 
 ## Gates
 
-Gates in `default-rubric.json` are pass/fail and parents mark them. Mention gate-relevant facts in the school's `cons` and evidence (an age cutoff the child misses, a Type A citation, a religious framework).
+Gates in `default-rubric.json` are pass/fail and parents mark them. Mention gate-relevant facts in the school's `cons` and evidence (an age cutoff the child misses, a serious licensing violation, a religious framework).
 
 ## Adapting to the family
 

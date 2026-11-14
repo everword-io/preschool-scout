@@ -1,6 +1,6 @@
 ---
 name: preschool-scout
-description: Research preschools near a family's home and produce a shareable decision report with a side-by-side comparison, application deadlines, nonprofit financials, licensing records, a two-parent scoring rubric, and draft "tell us about your child" essays. Use when a parent asks to find, compare, or choose a preschool or nursery school, plan preschool applications, or check whether a preschool is financially stable or well licensed. Strongest in California; works anywhere in the US with weaker licensing data.
+description: Research preschools near a family's home, including free public options (TK, public pre-K, Head Start), and produce a shareable decision report with a side-by-side comparison, application deadlines, nonprofit financials, licensing records, a two-parent scoring rubric, and draft "tell us about your child" essays. Use when a parent asks to find, compare, or choose a preschool, pre-K or nursery school, plan preschool applications, or check whether a preschool is financially stable or well licensed. Detailed state guides for California, Texas, New York and Ohio; works anywhere in the US.
 ---
 
 # Preschool Scout
@@ -24,9 +24,9 @@ Tell the parent up front: this takes a while (often 30 to 90 minutes of research
 
 1. **Intake.** Ask the questions in `references/intake.md` in one message. Fill gaps with the stated defaults; don't interrogate.
    Then compute the child's age on each likely cutoff date (usually September 1 of the start year) and tell the parent now if a late birthday narrows the field. A child born after the cutoff for "3 by September 1" will be dropped by many schools, and finding that out at step 4 wastes research.
-2. **Find candidates.** Follow "Discovery" in `references/research.md`. Aim for 10 to 15 schools within reach of home. Include any school the family already named.
+2. **Find candidates.** Open the state guide in `references/states/` for the family's state (no guide yet: follow "A state with no guide" in `references/states/README.md`). Then follow "Discovery" in `references/research.md`. Aim for 10 to 15 programs within reach of home, including the free public options the child could be eligible for ("Public programs" in `references/research.md`). Include any school the family already named.
 3. **Check in.** Show the candidate list with one line each (approach, distance, rough cost) and your proposed 4 to 6 finalists. Let them add or cut. Once they reply, continue without further check-ins unless something blocks you.
-4. **Research every finalist in depth, the rest lightly.** Follow "Per school" in `references/research.md`: programs, tuition, hours, ratios, admissions dates for *this* cycle, kindergarten placement, licensing record, Form 990 financials, closure-risk signals.
+4. **Research every finalist in depth, the rest lightly.** Follow "Per school" in `references/research.md`: programs, tuition, hours, ratios, admissions dates for *this* cycle, kindergarten placement, licensing record, Form 990 financials, closure-risk signals. For public programs, eligibility and enrollment dates instead of tuition and financials.
 5. **Score the public record** against the rubric in `assets/default-rubric.json` using `references/rubric.md`. Adapt the family criteria labels to this family (for example "Path to Lick-Wilmerding" instead of "Path to your kindergarten targets"), keeping the ids.
 6. **Write** the summary, recommendation, financial summary and essay drafts using `references/writing.md`.
 7. **Assemble `report.json`** exactly as described in `references/schema.md`. `assets/sample-report.json` is a complete worked example with fictional schools; copy its shape.
@@ -39,7 +39,7 @@ Tell the parent up front: this takes a while (often 30 to 90 minutes of research
 - **Prefer primary sources**: the school's own site, the state licensing record, the IRS filing. Third-party listings (Winnie, Yelp, forums) are leads; label any figure from them `confidence: "third-party listing"`.
 - **Cite.** Every school gets `sources` with the pages you used.
 - **Stop at CAPTCHAs and logins.** Never try to bypass bot checks. Note what you couldn't reach in `caveats`.
-- **Privacy.** The report gets shared. Use the child's first name only, no photos, no medical or developmental details unless the parent explicitly wants them in an essay. Don't put the home's exact address in the report; a cross-street or neighborhood is enough.
+- **Privacy.** The report gets shared. Never put the family's income in it; for public programs, say "likely eligible" or "may qualify" and list the program's own criteria. Use the child's first name only, no photos, no medical or developmental details unless the parent explicitly wants them in an essay. Don't put the home's exact address in the report; a cross-street or neighborhood is enough.
 - **Plain writing, no em dashes.** See `references/writing.md`.
 
 ## Delivering the report
@@ -54,6 +54,7 @@ Tell the parent up front: this takes a while (often 30 to 90 minutes of research
 
 - `references/intake.md`: the intake questions and defaults
 - `references/research.md`: where to find each fact, and how to judge it
+- `references/states/`: one guide per state (licensing data, violation categories, public programs), and how to research a state with no guide
 - `references/rubric.md`: scoring the public record; gates
 - `references/writing.md`: voice, the summary, essays
 - `references/schema.md`: every field in `report.json`

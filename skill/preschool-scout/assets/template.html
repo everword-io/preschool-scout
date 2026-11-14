@@ -164,7 +164,7 @@ function upcoming(n){return (D.deadlines||[]).filter(d=>{const x=daysLeft(d.date
     <div class="two" style="margin-top:12px">
       <div class="card"><h3>The family brief</h3>
         <dl class="facts">
-          ${C.name?`<dt>Child</dt><dd>${esc(C.name)}${C.birthdate?", born "+esc(C.birthdate):""}</dd>`:""}
+          ${C.name?`<dt>Child</dt><dd>${esc(C.name)}${C.birthMonth||C.birthdate?", born "+esc(bornLabel(C.birthMonth||C.birthdate)):""}</dd>`:""}
           ${C.startTerm?`<dt>Start</dt><dd>${esc(C.startTerm)}</dd>`:""}
           ${M.home&&M.home.label?`<dt>Home</dt><dd>${esc(M.home.label)}${M.home.zip?" ("+esc(M.home.zip)+")":""}</dd>`:""}
           ${F.budget?`<dt>Budget</dt><dd>${esc(F.budget)}</dd>`:""}
@@ -181,24 +181,29 @@ function upcoming(n){return (D.deadlines||[]).filter(d=>{const x=daysLeft(d.date
     <div class="tbl"><table><thead><tr><th>School</th><th>Approach</th><th class="n">Distance</th><th>Tuition</th><th>Fit</th></tr></thead><tbody>${glance}</tbody></table></div>`;
 })();
 
+function bornLabel(v){const m=/^(\d{4})-(\d{2})/.exec(String(v||""));if(!m)return v;return ["January","February","March","April","May","June","July","August","September","October","November","December"][+m[2]-1]+" "+m[1];}
+function sectorTag(s){return s.sector==="public"?" "+pill("public","hi"):s.sector==="head-start"?" "+pill("Head Start","hi"):"";}
 /* ---------- schools ---------- */
 (function(){
   const cmp=S.filter(s=>s.tier!=="dropped").map(s=>{const a=s.admissions||{},l=s.licensing||{};
-    return `<tr><td><a href="#schools:${esc(s.id)}"><b>${esc(s.name)}</b></a></td><td>${esc(s.ratio)}</td><td>${esc(s.ages)}</td><td>${esc(s.hours)}</td><td>${esc(s.tuition&&s.tuition.amount)}</td><td>${esc(a.type==="rolling"?"Rolling":a.type==="cycle"?"Annual cycle":a.type||"")}${a.tourRequired?" · tour required":""}</td><td>${l.typeA!=null?`A ${esc(l.typeA)} · B ${esc(l.typeB||0)}`:""}</td><td>${esc(s.kPlacement&&s.kPlacement.published?"Published":"Not published")}</td></tr>`;}).join("");
-  const card=s=>{const t=s.tuition||{},a=s.admissions||{},l=s.licensing||{},k=s.kPlacement||{};
+    return `<tr><td><a href="#schools:${esc(s.id)}"><b>${esc(s.name)}</b></a>${sectorTag(s)}</td><td>${esc(s.ratio)}</td><td>${esc(s.ages)}</td><td>${esc(s.hours)}</td><td>${esc(s.tuition&&s.tuition.amount)}</td><td>${esc(a.type==="rolling"?"Rolling":a.type==="cycle"?"Annual cycle":a.type||"")}${a.tourRequired?" · tour required":""}</td><td>${l.exempt?"Exempt":l.unavailable?"Not verified":l.serious!=null?`${esc(l.serious)} serious · ${esc(l.minor||0)} minor`:""}</td><td>${esc(s.kPlacement&&s.kPlacement.published?"Published":"Not published")}</td></tr>`;}).join("");
+  const card=s=>{const t=s.tuition||{},a=s.admissions||{},l=s.licensing||{},k=s.kPlacement||{},pb=s.public||{};
     const progs=(s.programs||[]).length?`<div class="tbl" style="margin:10px 0"><table><thead><tr><th>Program</th><th>Ages</th><th>Schedule</th><th>Notes</th></tr></thead><tbody>${s.programs.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.ages)}</td><td>${esc(p.schedule)}</td><td>${esc(p.notes)}</td></tr>`).join("")}</tbody></table></div>`:"";
     return `<article class="card school" id="schools-${esc(s.id)}">
-      <div class="head"><div><h3>${esc(s.name)}</h3><div class="meta">${esc([s.address,s.distanceMi!=null?s.distanceMi+" mi":"",s.walkMin?"about "+s.walkMin+" min walk":"",s.website?"":""].filter(Boolean).join(" · "))}${s.website?` · <a href="${esc(s.website)}" target="_blank" rel="noopener">site</a>`:""}</div></div><div>${fitPill(s.fit)}</div></div>
+      <div class="head"><div><h3>${esc(s.name)}</h3><div class="meta">${esc([s.address,s.distanceMi!=null?s.distanceMi+" mi":"",s.walkMin?"about "+s.walkMin+" min walk":"",s.website?"":""].filter(Boolean).join(" · "))}${s.website?` · <a href="${esc(s.website)}" target="_blank" rel="noopener">site</a>`:""}</div></div><div>${sectorTag(s)} ${fitPill(s.fit)}</div></div>
       ${s.fit&&s.fit.why?`<p>${esc(s.fit.why)}</p>`:""}
       ${s.tier==="dropped"&&s.dropReason?`<p class="banner warn">Dropped: ${esc(s.dropReason)}</p>`:""}
       <dl class="facts">
+        ${pb.program?`<dt>Program</dt><dd>${esc(pb.program)}${pb.cost?" · "+esc(pb.cost):""}</dd>`:""}
+        ${pb.eligibility?`<dt>Who can enroll</dt><dd>${esc(pb.eligibility)}${pb.eligible?" "+pill(pb.eligible==="age-eligible"||pb.eligible==="likely"?"age-eligible":pb.eligible==="not eligible"||pb.eligible==="unlikely"?"not eligible":"may qualify",pb.eligible==="age-eligible"||pb.eligible==="likely"?"hi":"mid"):""}</dd>`:""}
+        ${pb.enrollment?`<dt>Enrollment</dt><dd>${esc(pb.enrollment)}</dd>`:""}
         ${s.approach?`<dt>Approach</dt><dd>${esc(s.approach)}</dd>`:""}
         ${s.ages?`<dt>Ages</dt><dd>${esc(s.ages)}</dd>`:""}
         ${s.ratio?`<dt>Ratio</dt><dd>${esc(s.ratio)}</dd>`:""}
         ${s.hours?`<dt>Hours</dt><dd>${esc(s.hours)}</dd>`:""}
         ${t.unknown&&!t.amount?`<dt>Tuition</dt><dd>Not published. Ask on the tour.</dd>`:""}${t.amount?`<dt>Tuition</dt><dd>${esc(t.amount)}${t.year?" ("+esc(t.year)+")":""}${t.confidence&&t.confidence!=="confirmed"?" "+pill(t.confidence,"mid"):""}</dd>`:""}
         ${a.type||a.notes?`<dt>Admissions</dt><dd>${esc([a.type==="rolling"?"Rolling":a.type==="cycle"?"Annual cycle":a.type,a.tourRequired?"tour required":"",a.applicationFee?"fee "+a.applicationFee:"",a.notes].filter(Boolean).join(" · "))}</dd>`:""}
-        ${l.summary?`<dt>Licensing</dt><dd>${esc(l.summary)}${l.url?` <a href="${esc(l.url)}" target="_blank" rel="noopener">record</a>`:""}</dd>`:""}
+        ${l.summary?`<dt>Licensing</dt><dd>${l.exempt?pill("not licensed as child care","mid")+" ":""}${l.unavailable?pill("not verified","mid")+" ":""}${l.basis==="researcher"?pill("our classification","na")+" ":""}${esc(l.summary)}${l.url?` <a href="${esc(l.url)}" target="_blank" rel="noopener">record</a>`:""}</dd>`:""}
         ${k.summary?`<dt>K placement</dt><dd>${esc(k.summary)}</dd>`:""}
       </dl>
       ${progs}
@@ -223,12 +228,12 @@ function upcoming(n){return (D.deadlines||[]).filter(d=>{const x=daysLeft(d.date
   const order=["strong","steady","fragile","unknown"], label={strong:"Well funded",steady:"Steady",fragile:"Fragile",unknown:"No visibility"};
   const fcard=s=>{const f=s.finances||{},lg=s.longevity||{};
     return `<article class="card" id="finances-${esc(s.id)}"><div class="head" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3>${esc(s.name)}</h3><div>${pill(label[f.tier||"unknown"],f.tier||"unknown")} ${lg.risk?pill("closure risk: "+lg.risk,(lg.risk||"unknown")+"-risk"):""}</div></div>
-      <div class="meta">${esc([f.status==="nonprofit"?"Nonprofit":f.status==="forprofit"?"For-profit":f.status==="church"?"Church program (no separate filing)":f.status,f.ein?"EIN "+f.ein:"",f.fy?"FY"+f.fy:""].filter(Boolean).join(" · "))}</div>
+      <div class="meta">${esc([f.status==="nonprofit"?"Nonprofit":f.status==="forprofit"?"For-profit":f.status==="church"?"Church program (no separate filing)":f.status==="public"?"Publicly funded (no Form 990)":f.status,f.ein?"EIN "+f.ein:"",f.fy?"FY"+f.fy:""].filter(Boolean).join(" · "))}</div>
       ${f.revenue!=null||f.netAssets!=null?`<dl class="facts">${f.revenue!=null?`<dt>Revenue</dt><dd>${money(f.revenue)}</dd>`:""}${f.expenses!=null?`<dt>Expenses</dt><dd>${money(f.expenses)}</dd>`:""}${f.netAssets!=null?`<dt>Net assets</dt><dd>${money(f.netAssets)}</dd>`:""}${f.cashMonths!=null?`<dt>Cash</dt><dd>about ${esc(f.cashMonths)} months of expenses</dd>`:""}</dl>`:""}
       ${f.summary?`<p>${esc(f.summary)}</p>`:""}${list(f.flags)}${lg.why?`<p class="meta">Longevity: ${esc(lg.why)}</p>`:""}</article>`;};
   const Fn=D.financesSummary||{};
   $("#pane-finances").innerHTML=`<h2>${esc(Fn.headline||"Money and staying power")}</h2>${(Fn.body||[]).map(p=>`<p class="lede">${esc(p)}</p>`).join("")}
-    <p class="meta">Figures come from each school's most recent IRS Form 990 where one exists. For-profit and church-run schools file nothing public, so their tier is "no visibility", which is not the same as weak.</p>
+    <p class="meta">Figures come from each school's most recent IRS Form 990 where one exists. For-profit and church-run schools file nothing public, and public programs are funded by a district or government, so their tier is "no visibility", which is not the same as weak.</p>
     ${order.map(t=>{const g=S.filter(s=>s.tier!=="dropped"&&((s.finances||{}).tier||"unknown")===t);return g.length?`<h2>${label[t]}</h2><div class="grid">${g.map(fcard).join("")}</div>`:"";}).join("")}`;
 })();
 

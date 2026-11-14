@@ -51,6 +51,21 @@ for (const s of schools) {
   if (s.tier === "finalist" && !s.tuition?.amount && !s.tuition?.unknown)
     warnings.push(`${s.id}: finalist with no tuition (find it, or set tuition.unknown: true and add a tour question)`);
   if (s.tier === "dropped" && !s.dropReason) warnings.push(`${s.id}: dropped without a dropReason`);
+  if (s.sector && !["independent", "public", "head-start"].includes(s.sector)) errors.push(`${s.id}: sector must be independent, public or head-start`);
+  if ((s.sector === "public" || s.sector === "head-start") && !s.public?.eligibility) warnings.push(`${s.id}: public program with no public.eligibility`);
+  // Older reports used California's Type A / Type B names; read them as serious / minor.
+  if (s.licensing) {
+    if (s.licensing.serious == null && s.licensing.typeA != null) s.licensing.serious = s.licensing.typeA;
+    if (s.licensing.minor == null && s.licensing.typeB != null) s.licensing.minor = s.licensing.typeB;
+  }
+  if (s.tier === "finalist" && !s.licensing?.summary) warnings.push(`${s.id}: finalist with no licensing summary (say what you found, or exempt: true)`);
+}
+// The report is shared: keep only the birth month and year.
+const child = report.family?.child;
+if (child?.birthdate) {
+  child.birthMonth = child.birthMonth ?? String(child.birthdate).slice(0, 7);
+  delete child.birthdate;
+  warnings.push("family.child.birthdate: replaced with birthMonth (month and year only) in the report");
 }
 const finalists = schools.filter((s) => s.tier === "finalist").length;
 if (finalists === 0) warnings.push("no finalists: the rubric will use the first six schools");

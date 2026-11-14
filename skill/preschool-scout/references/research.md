@@ -4,10 +4,11 @@
 
 Build the candidate list from several sources, then dedupe by name and address.
 
-1. **State licensing search by zip.** In California: <https://www.ccld.dss.ca.gov/carefacilitysearch/>, facility type "Child Care Center", search the home zip and neighboring zips. This list is complete for licensed centers and gives the facility number you'll need later. Other states: search "<state> child care licensing search".
-2. **Web search** for "preschool near <neighborhood>", "<approach> preschool <city>", and "nursery school <zip>".
-3. **Local directories and listings**: city early-education departments, Winnie, parent-forum threads. Treat these as leads only.
-4. **Schools the family named.** Always include them.
+1. **State licensing search by zip.** The state guide in `states/` gives the query. Search the home zip and its neighbors. This list is complete for licensed centers and gives the license numbers you'll need later.
+2. **Public programs.** See "Public programs" below.
+3. **Web search** for "preschool near <neighborhood>", "<approach> preschool <city>", and "nursery school <zip>".
+4. **Local directories and listings**: city early-education departments, Winnie, parent-forum threads. Treat these as leads only.
+5. **Schools the family named.** Always include them.
 
 Drop home daycares unless the family wants them, and drop programs that don't serve the child's age at the start date. Compute distances with `node scripts/distance.mjs` or any geocoder; report straight-line miles and a rough walk time, and say they're estimates.
 
@@ -26,40 +27,50 @@ Visit the school's own site first. Most have pages named Admissions, Apply, Tuit
 | Teachers | Faculty or Team page | Tenure, degrees; many long-tenured teachers is a strong signal |
 | Leadership | About, Team | Director's start year; three directors in four years is a flag |
 
-## Licensing record (California)
+## Licensing record
 
-The search page <https://www.ccld.dss.ca.gov/carefacilitysearch/> is often down (503). Its JSON API behind it is more reliable; use it directly (send a browser-like user-agent):
+Open `states/<two-letter code>.md` for the family's state (`states/README.md` lists them). It gives the data source, the exact queries, and how the state's violation categories map to the report's `licensing.serious` and `licensing.minor` counts. For a state with no guide, follow "A state with no guide" in `states/README.md`.
 
-| What | URL |
-| --- | --- |
-| Centers in a zip | `https://www.ccld.dss.ca.gov/transparencyapi/api/FacilitySearch?facType=850&facility=&Street=&city=&zip=94110&county=&facnum=` (850 = child care centers; all the empty parameters are required) |
-| One facility | `https://www.ccld.dss.ca.gov/transparencyapi/api/FacilityDetail/<facility number>` |
-| One visit report | `https://www.ccld.dss.ca.gov/transparencyapi/api/FacilityReports?facNum=<facility number>&inx=<n>` (HTML; n counts from 1; some visits have no report) |
+For every finalist:
 
-`FacilityDetail` gives capacity, licensed ages and hours (`COMMENTS`), the last visit, and citation counts split three ways: `NBRINSPTYPA`/`B` (inspections), `NBRCMPLTTYPA`/`B` (complaints) and `NBROTHERTYPA`/`B` (other visits). For the report, `typeA` is the sum of the three A counts and `typeB` the sum of the three B counts. Read the visit reports for every finalist to learn what each citation was about.
-
-- **Type A** citations are immediate risk to health or safety (for example a child left unsupervised). Any Type A in the record fails gate g2 unless the parents are satisfied with the school's answer.
-- **Type B** citations are lower risk (paperwork, a missing outlet cover). Several on supervision or ratios is still a pattern worth asking about.
-- **Window:** use whatever the state publishes, which is usually the last three to five years. Say the window in the summary, for example "no citations in visits since 2021".
-- Summarize in one plain sentence, and put the facility number and the `FacilityDetail` URL in `licensing`.
-
-If the state is unreachable, mirrors such as readyrule.com or schoolscope.co republish the same records; cite the mirror and say so.
+- Find the program's record by its license or facility number, and confirm the license is active at the same address.
+- Count serious and minor violations over the window the state publishes, and say the window in `licensing.summary`, for example "no serious violations in visits since 2021".
+- Read the report behind every serious violation, and any minor ones about supervision, ratios or safety, so the summary can say what happened.
+- A violation the state itself ranks as serious fails gate g2 unless the parents are satisfied with the school's answer. Where the state has no severity tiers and you classified a finding yourself, set `licensing.basis: "researcher"`, say so in the summary, and treat it as a g2 question for the tour, not an automatic fail.
+- Put the facility number and a link to the record in `licensing`.
+- If you couldn't reach the record, or it only covers part of the window, set `licensing.unavailable: true`, leave the counts out and say what's missing. A missing count must never read as zero.
 
 Licensing records are also a quick check of a school's own claims: capacity versus stated class sizes, and licensed hours versus advertised hours.
 
-Outside California, use the state's licensing lookup and map its categories to "serious" and "minor" in the summary.
+Public school programs (TK, district pre-K) are often not licensed as child care. Set `licensing.exempt: true` with a one-line summary instead of leaving the record blank, so parents can tell "exempt" from "not found".
+
+## Public programs
+
+Include free and public options alongside independent schools unless the family says not to. They are often what a family most needs to know about, and a report that leaves them out steers people toward tuition.
+
+1. **The state's pre-K and TK programs.** The state guide lists them with eligibility. Otherwise search for the state's universal or public preschool program by name (for example "<state> universal preschool", "<state> public pre-K eligibility") on the state education or early childhood department's site. Many states also have tuition credits or subsidies; keep those separate from free seats. Find which nearby schools or centers offer seats.
+   Zip codes cross school district lines. Ask the family which district they live in, or use the district's official boundary lookup, before naming district programs. The street address stays out of the report.
+2. **City programs**, where they exist (New York City's 3-K and Pre-K for All, for example).
+3. **Head Start.** Search the [Head Start Center Locator](https://headstart.gov/center-locator) by zip code. It may block non-browser clients; if so, search the web for "Head Start <city>" and the grantee's own site.
+
+For each public program, record in `public`: the program type, who is eligible (age cutoff, income or other criteria, in the program's own terms), how enrollment works (district lottery, application window, first come), the enrollment dates for the start year, and the cost (usually free; note any fee for extended hours). Add enrollment dates to `deadlines`.
+
+Set `public.eligible` to "age-eligible" only when age and residency are the whole test and the child meets them. Anything that depends on income, benefits, housing, foster care, disability, military service or language is "may qualify", with the program's criteria listed generically. Never say which of those the family meets, and never put their income in the report. Eligibility is not a seat: don't promise a seat, a site or a schedule unless the program itself guarantees it for this cycle.
+
+Public programs don't file Form 990s: set `finances.status: "public"`. A Head Start grantee may be a nonprofit with its own filing, but that filing covers many sites; mention it only as context.
 
 ## Finances (nonprofits)
 
 Most independent preschools are 501(c)(3) nonprofits and file IRS Form 990, which is public.
 
-1. Find the EIN: `node scripts/propublica.mjs search "<name>" CA`. Try the legal name, shorter names, and "nursery school". Church-run schools often file under the church and won't appear; set `status: "church"` and `tier: "unknown"`.
+1. Find the EIN: `node scripts/propublica.mjs search "<name>" <STATE>`. Try the legal name, shorter names, and "nursery school". Church-run schools often file under the church and won't appear; set `status: "church"` and `tier: "unknown"`.
 2. Pull the history: `node scripts/propublica.mjs filings <EIN>`.
 3. Judge, using the newest year with figures (the script prints it first and warns if newer filings lack figures):
    - **fragile**: negative net assets, two or more deficit years in the last three, or prepaid tuition exceeding cash
    - **strong**: net assets above a year of expenses and no deficit in the newest year
    - **steady**: anything in between
    - **unknown**: for-profit, church-run or no filings. Say "no visibility", not "weak"
+   - Public programs (TK, district pre-K): `status: "public"`, `tier: "unknown"`; the summary says they are publicly funded
 
    Check fragile first; if any fragile condition holds, the tier is fragile however large the assets. Large liabilities on their own are not fragile: a mortgage on a building the school owns usually comes with matching assets. When liabilities jump (for example from $150K to $6M), find out why (a building purchase, a loan, deferred revenue), say so in `flags`, and if you can't tell, flag it as a tour question.
 4. Cash months: if the filing PDF or XML shows cash plus savings (Part X lines 1 and 2), divide by monthly expenses. Otherwise estimate from net assets and say so.
